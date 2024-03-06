@@ -28,11 +28,10 @@ public class VehicleBrandServiceImpl implements VehicleBrandService {
     }
 
     @Override
-    public VehicleBrandResponse findByBrandName(VehicleBrandRequest request) throws ValueNotFoundException{
+    public VehicleBrand findByBrandName(VehicleBrandRequest request) throws ValueNotFoundException{
         String brandName = request.getBrandName();
-        VehicleBrand brand = brandRepository.findByBrandNameIgnoreCase(brandName)
+        return brandRepository.findByBrandNameIgnoreCase(brandName)
                 .orElseThrow(() -> new ValueNotFoundException("Brand with name: " + brandName + " not found"));
-        return mapToResponse(brand);
     }
 
     @Override
