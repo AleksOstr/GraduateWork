@@ -8,6 +8,7 @@ import ru.egartech.vehicleapp.exceptions.ValueNotFoundException;
 import ru.egartech.vehicleapp.model.VehicleBrand;
 import ru.egartech.vehicleapp.repository.VehicleBrandRepository;
 import ru.egartech.vehicleapp.service.interfaces.VehicleBrandService;
+import ru.egartech.vehicleapp.service.response.VehicleBrandResponse;
 
 @Service
 @RequiredArgsConstructor
@@ -15,25 +16,33 @@ public class VehicleBrandServiceImpl implements VehicleBrandService {
 
     private final VehicleBrandRepository brandRepository;
     @Override
-    public VehicleBrand create(VehicleBrandRequest request) throws ExistingValueException{
+    public VehicleBrandResponse create(VehicleBrandRequest request) throws ExistingValueException{
         String brandName = request.getBrandName();
         if (brandRepository.findByBrandNameIgnoreCase(brandName).isPresent()) {
             throw new ExistingValueException("Brand with name: " + brandName + " already exists");
         }
         VehicleBrand brand = new VehicleBrand();
         brand.setBrandName(brandName);
-        return brandRepository.save(brand);
+        brand = brandRepository.save(brand);
+        return mapToResponse(brand);
     }
 
     @Override
-    public VehicleBrand findByBrandName(VehicleBrandRequest request) throws ValueNotFoundException{
+    public VehicleBrandResponse findByBrandName(VehicleBrandRequest request) throws ValueNotFoundException{
         String brandName = request.getBrandName();
-        return brandRepository.findByBrandNameIgnoreCase(brandName)
+        VehicleBrand brand = brandRepository.findByBrandNameIgnoreCase(brandName)
                 .orElseThrow(() -> new ValueNotFoundException("Brand with name: " + brandName + " not found"));
+        return mapToResponse(brand);
     }
 
     @Override
     public void updateBrand(VehicleBrand brand) {
         brandRepository.save(brand);
+    }
+
+    private VehicleBrandResponse mapToResponse(VehicleBrand brand) {
+        VehicleBrandResponse response = new VehicleBrandResponse();
+        response.setBrandName(brand.getBrandName());
+        return response;
     }
 }
