@@ -7,5 +7,5 @@ public interface VehicleBrandService {
 
     VehicleBrand create(VehicleBrandRequest request);
     VehicleBrand findByBrandName(VehicleBrandRequest request);
-    VehicleBrand updateBrand(VehicleBrand brand);
+    void updateBrand(VehicleBrand brand);
 }

@@ -33,7 +33,7 @@ public class VehicleBrandServiceImpl implements VehicleBrandService {
     }
 
     @Override
-    public VehicleBrand updateBrand(VehicleBrand brand) {
-        return brandRepository.save(brand);
+    public void updateBrand(VehicleBrand brand) {
+        brandRepository.save(brand);
     }
 }
