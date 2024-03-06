@@ -6,6 +6,8 @@ import ru.egartech.vehicleapp.service.response.VehicleModelResponse;
 
 public interface VehicleModelService {
     VehicleModelResponse create(VehicleModelRequest request);
-    VehicleModelResponse findByModelName(VehicleModelRequest request);
+    VehicleModel findByModelName(VehicleModelRequest request);
+
+    void updateModel(VehicleModel model);
 
 }
