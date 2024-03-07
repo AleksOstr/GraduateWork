@@ -8,7 +8,9 @@ import java.util.List;
 
 public interface VehicleTypeService {
     VehicleTypeResponse create(VehicleTypeRequest request);
+
     VehicleType findByName(VehicleTypeRequest request);
+
     List<VehicleTypeResponse> findAll();
 
     void updateType(VehicleType type);

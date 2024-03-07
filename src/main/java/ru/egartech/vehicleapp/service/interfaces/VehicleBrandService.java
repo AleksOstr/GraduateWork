@@ -7,6 +7,8 @@ import ru.egartech.vehicleapp.service.response.VehicleBrandResponse;
 public interface VehicleBrandService {
 
     VehicleBrandResponse create(VehicleBrandRequest request);
+
     VehicleBrand findByBrandName(VehicleBrandRequest request);
+
     void updateBrand(VehicleBrand brand);
 }

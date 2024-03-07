@@ -10,6 +10,7 @@ public interface VehicleCategoryService {
     VehicleCategoryResponse create(VehicleCategoryRequest request);
 
     VehicleCategory findByCategoryName(VehicleCategoryRequest request);
+
     List<VehicleCategoryResponse> findAll();
 
     void updateCategory(VehicleCategory category);
