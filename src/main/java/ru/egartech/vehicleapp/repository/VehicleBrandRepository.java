@@ -8,8 +8,11 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
+/**
+ * Репозиторий марок ТС
+ */
 @Repository
 public interface VehicleBrandRepository extends JpaRepository<VehicleBrand, UUID> {
-    List<VehicleBrand> findAllByBrandNameIgnoreCase(String brandName);
-    Optional<VehicleBrand> findByBrandNameIgnoreCase(String brandName);
+    List<VehicleBrand> findAllByNameIgnoreCase(String brandName);
+    Optional<VehicleBrand> findByNameIgnoreCase(String brandName);
 }
