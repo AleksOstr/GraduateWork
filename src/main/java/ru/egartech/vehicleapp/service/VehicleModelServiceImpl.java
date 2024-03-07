@@ -28,7 +28,7 @@ public class VehicleModelServiceImpl implements VehicleModelService {
         }
         VehicleBrand brand = getBrand(request.getBrandName());
         VehicleModel model = new VehicleModel();
-        model.setModelName(modelName);
+        model.setName(modelName);
         model.setBrand(brand);
         model = modelRepository.save(model);
         brand.getModels().add(model);
@@ -57,7 +57,7 @@ public class VehicleModelServiceImpl implements VehicleModelService {
 
     private VehicleModelResponse mapToResponse(VehicleModel model) {
         VehicleModelResponse response = new VehicleModelResponse();
-        response.setModelName(model.getModelName());
+        response.setModelName(model.getName());
         return response;
     }
 }

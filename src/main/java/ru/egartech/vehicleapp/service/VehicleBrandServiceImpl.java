@@ -22,7 +22,7 @@ public class VehicleBrandServiceImpl implements VehicleBrandService {
             throw new ExistingValueException("Brand with name: " + brandName + " already exists");
         }
         VehicleBrand brand = new VehicleBrand();
-        brand.setBrandName(brandName);
+        brand.setName(brandName);
         brand = brandRepository.save(brand);
         return mapToResponse(brand);
     }
@@ -41,7 +41,7 @@ public class VehicleBrandServiceImpl implements VehicleBrandService {
 
     private VehicleBrandResponse mapToResponse(VehicleBrand brand) {
         VehicleBrandResponse response = new VehicleBrandResponse();
-        response.setBrandName(brand.getBrandName());
+        response.setBrandName(brand.getName());
         return response;
     }
 }

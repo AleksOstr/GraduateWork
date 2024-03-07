@@ -26,7 +26,7 @@ public class VehicleCategoryServiceImpl implements VehicleCategoryService {
             throw new ExistingValueException("Category with name: " + categoryName + " already exists");
         }
         VehicleCategory category = new VehicleCategory();
-        category.setCategoryName(categoryName);
+        category.setName(categoryName);
         category = categoryRepository.save(category);
         return mapToResponse(category);
     }
@@ -52,7 +52,7 @@ public class VehicleCategoryServiceImpl implements VehicleCategoryService {
 
     private VehicleCategoryResponse mapToResponse(VehicleCategory category) {
         VehicleCategoryResponse response = new VehicleCategoryResponse();
-        response.setCategoryName(category.getCategoryName());
+        response.setCategoryName(category.getName());
         return response;
     }
 }

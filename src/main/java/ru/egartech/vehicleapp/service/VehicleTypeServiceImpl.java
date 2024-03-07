@@ -25,7 +25,7 @@ public class VehicleTypeServiceImpl implements VehicleTypeService {
             throw new ExistingValueException("Type with name: " + " already exists");
         }
         VehicleType type = new VehicleType();
-        type.setTypeName(typeName);
+        type.setName(typeName);
         type = typeRepository.save(type);
         return mapToResponse(type);
     }
@@ -50,7 +50,7 @@ public class VehicleTypeServiceImpl implements VehicleTypeService {
 
     private VehicleTypeResponse mapToResponse(VehicleType type) {
         VehicleTypeResponse response = new VehicleTypeResponse();
-        response.setTypeName(type.getTypeName());
+        response.setTypeName(type.getName());
         return response;
     }
 }
