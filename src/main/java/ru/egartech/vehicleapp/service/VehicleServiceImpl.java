@@ -1,6 +1,7 @@
 package ru.egartech.vehicleapp.service;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import ru.egartech.vehicleapp.api.request.VehicleRequest;
 import ru.egartech.vehicleapp.exceptions.ExistingValueException;
@@ -10,6 +11,7 @@ import ru.egartech.vehicleapp.model.*;
 import ru.egartech.vehicleapp.repository.VehicleRepository;
 import ru.egartech.vehicleapp.service.interfaces.*;
 import ru.egartech.vehicleapp.service.response.VehicleResponse;
+import ru.egartech.vehicleapp.specification.VehicleSpecification;
 
 import java.util.List;
 import java.util.UUID;
@@ -35,7 +37,7 @@ public class VehicleServiceImpl implements VehicleService {
         setType(request, vehicle);
         setCategory(request, vehicle);
         vehicle.setRegNumber(request.getRegNumber());
-        vehicle.setProdYear(request.getProdYear());
+        vehicle.setProdYear(Integer.parseInt(request.getProdYear()));
         vehicle.setHasTrailer(request.getHasTrailer().equalsIgnoreCase("да"));
         Vehicle saved = vehicleRepository.save(vehicle);
 
@@ -50,8 +52,8 @@ public class VehicleServiceImpl implements VehicleService {
             checkRegNumber(request);
             vehicle.setRegNumber(request.getRegNumber());
         }
-        if (!(request.getProdYear().getYear() == vehicle.getProdYear().getYear())) {
-            vehicle.setProdYear(request.getProdYear());
+        if (!(Integer.parseInt(request.getProdYear()) == vehicle.getProdYear())) {
+            vehicle.setProdYear(Integer.parseInt(request.getProdYear()));
         }
         vehicle.setHasTrailer(request.getHasTrailer().equals("да"));
         if (!vehicle.getBrand().getName().equalsIgnoreCase(request.getBrand())) {
@@ -84,8 +86,11 @@ public class VehicleServiceImpl implements VehicleService {
 
     @Override
     public List<VehicleResponse> findByExample(VehicleRequest request) {
-
-        return null;
+        Specification<Vehicle> specification =
+                VehicleSpecification.byBrandName(request.getBrand())
+                        .and(VehicleSpecification.byProdYear(request.getProdYear()))
+                        .and(VehicleSpecification.byHasTrialer(request.getHasTrailer()));
+        return vehicleRepository.findAll(specification).stream().map(this::mapToResponse).toList();
     }
 
     private VehicleResponse mapToResponse(Vehicle vehicle) {
