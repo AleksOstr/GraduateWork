@@ -4,12 +4,15 @@ import jakarta.persistence.*;
 import lombok.Data;
 import org.springframework.format.annotation.DateTimeFormat;
 
-import java.util.Date;
+import java.time.LocalDate;
 import java.util.UUID;
 
+/**
+ * Сущность ТС
+ */
 @Data
 @Entity
-// Сущность ТС
+@Table(name = "vehicle")
 public class Vehicle {
 
     @Id
@@ -39,7 +42,7 @@ public class Vehicle {
     // Год выпуска
     @Column(name = "prod_year")
     @DateTimeFormat(pattern = "YYYY")
-    private Date prodYear;
+    private LocalDate prodYear;
 
     // Наличие прицепа
     @Column(name = "has_trailer")
