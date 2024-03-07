@@ -2,13 +2,13 @@ package ru.egartech.vehicleapp.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import ru.egartech.vehicleapp.api.request.VehicleBrandRequest;
 import ru.egartech.vehicleapp.exceptions.ExistingValueException;
 import ru.egartech.vehicleapp.exceptions.ValueNotFoundException;
 import ru.egartech.vehicleapp.model.VehicleBrand;
 import ru.egartech.vehicleapp.repository.VehicleBrandRepository;
 import ru.egartech.vehicleapp.service.interfaces.VehicleBrandService;
-import ru.egartech.vehicleapp.service.response.VehicleBrandResponse;
+
+import java.util.ArrayList;
 
 @Service
 @RequiredArgsConstructor
@@ -16,21 +16,19 @@ public class VehicleBrandServiceImpl implements VehicleBrandService {
 
     private final VehicleBrandRepository brandRepository;
     @Override
-    public VehicleBrandResponse create(VehicleBrandRequest request) throws ExistingValueException{
-        String brandName = request.getBrandName();
-        if (brandRepository.findByBrandNameIgnoreCase(brandName).isPresent()) {
+    public VehicleBrand create(String brandName) throws ExistingValueException{
+        if (brandRepository.findByNameIgnoreCase(brandName).isPresent()) {
             throw new ExistingValueException("Brand with name: " + brandName + " already exists");
         }
         VehicleBrand brand = new VehicleBrand();
         brand.setName(brandName);
-        brand = brandRepository.save(brand);
-        return mapToResponse(brand);
+        brand.setVehicles(new ArrayList<>());
+        return brandRepository.save(brand);
     }
 
     @Override
-    public VehicleBrand findByBrandName(VehicleBrandRequest request) throws ValueNotFoundException{
-        String brandName = request.getBrandName();
-        return brandRepository.findByBrandNameIgnoreCase(brandName)
+    public VehicleBrand findByName(String brandName) throws ValueNotFoundException{
+        return brandRepository.findByNameIgnoreCase(brandName)
                 .orElseThrow(() -> new ValueNotFoundException("Brand with name: " + brandName + " not found"));
     }
 
@@ -39,9 +37,4 @@ public class VehicleBrandServiceImpl implements VehicleBrandService {
         brandRepository.save(brand);
     }
 
-    private VehicleBrandResponse mapToResponse(VehicleBrand brand) {
-        VehicleBrandResponse response = new VehicleBrandResponse();
-        response.setBrandName(brand.getName());
-        return response;
-    }
 }

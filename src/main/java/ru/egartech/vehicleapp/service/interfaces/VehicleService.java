@@ -1,7 +1,6 @@
 package ru.egartech.vehicleapp.service.interfaces;
 
 import ru.egartech.vehicleapp.api.request.VehicleRequest;
-import ru.egartech.vehicleapp.model.Vehicle;
 import ru.egartech.vehicleapp.service.response.VehicleResponse;
 
 import java.text.ParseException;
@@ -10,9 +9,9 @@ import java.util.UUID;
 
 public interface VehicleService {
 
-    VehicleResponse create(VehicleRequest request) throws ParseException;
+    VehicleResponse create(VehicleRequest request);
 
-    void update(VehicleRequest request, UUID id);
+    VehicleResponse update(VehicleRequest request, UUID id);
 
     List<VehicleResponse> findByExample(VehicleRequest request);
 }

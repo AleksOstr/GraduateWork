@@ -1,15 +1,14 @@
 package ru.egartech.vehicleapp.service.interfaces;
 
-import ru.egartech.vehicleapp.api.request.VehicleTypeRequest;
 import ru.egartech.vehicleapp.model.VehicleType;
 import ru.egartech.vehicleapp.service.response.VehicleTypeResponse;
 
 import java.util.List;
 
 public interface VehicleTypeService {
-    VehicleTypeResponse create(VehicleTypeRequest request);
+    VehicleType create(String typeName);
 
-    VehicleType findByName(VehicleTypeRequest request);
+    VehicleType findByName(String typeName);
 
     List<VehicleTypeResponse> findAll();
 

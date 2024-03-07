@@ -1,13 +1,11 @@
 package ru.egartech.vehicleapp.service.interfaces;
 
-import ru.egartech.vehicleapp.api.request.VehicleModelRequest;
 import ru.egartech.vehicleapp.model.VehicleModel;
-import ru.egartech.vehicleapp.service.response.VehicleModelResponse;
 
 public interface VehicleModelService {
-    VehicleModelResponse create(VehicleModelRequest request);
+    VehicleModel create(String brandName, String modelName);
 
-    VehicleModel findByModelName(VehicleModelRequest request);
+    VehicleModel findByName(String modelName);
 
     void updateModel(VehicleModel model);
 

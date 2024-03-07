@@ -2,15 +2,13 @@ package ru.egartech.vehicleapp.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import ru.egartech.vehicleapp.api.request.VehicleCategoryRequest;
 import ru.egartech.vehicleapp.exceptions.ExistingValueException;
 import ru.egartech.vehicleapp.exceptions.ValueNotFoundException;
 import ru.egartech.vehicleapp.model.VehicleCategory;
 import ru.egartech.vehicleapp.repository.VehicleCategoryRepository;
 import ru.egartech.vehicleapp.service.interfaces.VehicleCategoryService;
-import ru.egartech.vehicleapp.service.response.VehicleCategoryResponse;
 
-import java.util.List;
+import java.util.ArrayList;
 
 @Service
 @RequiredArgsConstructor
@@ -20,39 +18,25 @@ public class VehicleCategoryServiceImpl implements VehicleCategoryService {
 
 
     @Override
-    public VehicleCategoryResponse create(VehicleCategoryRequest request) throws ExistingValueException{
-        String categoryName = request.getCategoryName();
-        if (categoryRepository.findByCategoryNameIgnoreCase(categoryName).isPresent()) {
+    public VehicleCategory create(String categoryName) throws ExistingValueException {
+        if (categoryRepository.findByNameIgnoreCase(categoryName).isPresent()) {
             throw new ExistingValueException("Category with name: " + categoryName + " already exists");
         }
         VehicleCategory category = new VehicleCategory();
         category.setName(categoryName);
-        category = categoryRepository.save(category);
-        return mapToResponse(category);
+        category.setVehicles(new ArrayList<>());
+        return categoryRepository.save(category);
     }
 
     @Override
-    public VehicleCategory findByCategoryName(VehicleCategoryRequest request) throws ValueNotFoundException{
-        String categoryName = request.getCategoryName();
-        return categoryRepository.findByCategoryNameIgnoreCase(categoryName)
+    public VehicleCategory findByName(String categoryName) throws ValueNotFoundException {
+        return categoryRepository.findByNameIgnoreCase(categoryName)
                 .orElseThrow(() -> new ValueNotFoundException("Category with name: " + categoryName + " not found"));
     }
 
-    @Override
-    public List<VehicleCategoryResponse> findAll() {
-        List<VehicleCategory> categories = categoryRepository.findAll();
-        return categories.stream()
-                .map(this::mapToResponse).toList();
-    }
 
     @Override
     public void updateCategory(VehicleCategory category) {
         categoryRepository.save(category);
-    }
-
-    private VehicleCategoryResponse mapToResponse(VehicleCategory category) {
-        VehicleCategoryResponse response = new VehicleCategoryResponse();
-        response.setCategoryName(category.getName());
-        return response;
     }
 }

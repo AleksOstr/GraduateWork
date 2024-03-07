@@ -2,7 +2,6 @@ package ru.egartech.vehicleapp.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import ru.egartech.vehicleapp.api.request.VehicleTypeRequest;
 import ru.egartech.vehicleapp.exceptions.ExistingValueException;
 import ru.egartech.vehicleapp.exceptions.ValueNotFoundException;
 import ru.egartech.vehicleapp.model.VehicleType;
@@ -10,6 +9,7 @@ import ru.egartech.vehicleapp.repository.VehicleTypeRepository;
 import ru.egartech.vehicleapp.service.interfaces.VehicleTypeService;
 import ru.egartech.vehicleapp.service.response.VehicleTypeResponse;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -19,21 +19,19 @@ public class VehicleTypeServiceImpl implements VehicleTypeService {
     private final VehicleTypeRepository typeRepository;
 
     @Override
-    public VehicleTypeResponse create(VehicleTypeRequest request) throws ExistingValueException{
-        String typeName = request.getTypeName();
-        if (typeRepository.findByTypeNameIgnoreCase(typeName).isPresent()) {
+    public VehicleType create(String typeName) throws ExistingValueException {
+        if (typeRepository.findByNameIgnoreCase(typeName).isPresent()) {
             throw new ExistingValueException("Type with name: " + " already exists");
         }
         VehicleType type = new VehicleType();
         type.setName(typeName);
-        type = typeRepository.save(type);
-        return mapToResponse(type);
+        type.setVehicles(new ArrayList<>());
+        return typeRepository.save(type);
     }
 
     @Override
-    public VehicleType findByName(VehicleTypeRequest request) throws ValueNotFoundException {
-        String typeName = request.getTypeName();
-        return typeRepository.findByTypeNameIgnoreCase(typeName)
+    public VehicleType findByName(String typeName) throws ValueNotFoundException {
+        return typeRepository.findByNameIgnoreCase(typeName)
                 .orElseThrow(() -> new ValueNotFoundException("Type with name: " + typeName + " not found"));
     }
 

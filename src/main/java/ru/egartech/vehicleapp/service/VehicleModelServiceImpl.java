@@ -2,8 +2,6 @@ package ru.egartech.vehicleapp.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import ru.egartech.vehicleapp.api.request.VehicleBrandRequest;
-import ru.egartech.vehicleapp.api.request.VehicleModelRequest;
 import ru.egartech.vehicleapp.exceptions.ExistingValueException;
 import ru.egartech.vehicleapp.exceptions.ValueNotFoundException;
 import ru.egartech.vehicleapp.model.VehicleBrand;
@@ -11,7 +9,8 @@ import ru.egartech.vehicleapp.model.VehicleModel;
 import ru.egartech.vehicleapp.repository.VehicleModelRepository;
 import ru.egartech.vehicleapp.service.interfaces.VehicleBrandService;
 import ru.egartech.vehicleapp.service.interfaces.VehicleModelService;
-import ru.egartech.vehicleapp.service.response.VehicleModelResponse;
+
+import java.util.ArrayList;
 
 @Service
 @RequiredArgsConstructor
@@ -21,26 +20,22 @@ public class VehicleModelServiceImpl implements VehicleModelService {
     private final VehicleBrandService brandService;
 
     @Override
-    public VehicleModelResponse create(VehicleModelRequest request) throws ExistingValueException {
-        String modelName = request.getModelName();
-        if (modelRepository.findByModelNameIgnoreCase(modelName).isPresent()) {
+    public VehicleModel create(String brandName, String modelName) throws ExistingValueException {
+        if (modelRepository.findByNameIgnoreCase(modelName).isPresent()) {
             throw new ExistingValueException("Model with name: " + modelName + " already exists");
         }
-        VehicleBrand brand = getBrand(request.getBrandName());
+        VehicleBrand brand = getBrand(brandName);
         VehicleModel model = new VehicleModel();
         model.setName(modelName);
         model.setBrand(brand);
-        model = modelRepository.save(model);
+        model.setVehicles(new ArrayList<>());
         brand.getModels().add(model);
-        brandService.updateBrand(brand);
-        return mapToResponse(model);
+        return modelRepository.save(model);
     }
 
     @Override
-    public VehicleModel findByModelName(VehicleModelRequest request) throws ValueNotFoundException{
-        String modelName = request.getModelName();
-
-        return modelRepository.findByModelNameIgnoreCase(modelName)
+    public VehicleModel findByName(String modelName) throws ValueNotFoundException {
+        return modelRepository.findByNameIgnoreCase(modelName)
                 .orElseThrow(() -> new ValueNotFoundException("Model with name: " + modelName + " not found"));
     }
 
@@ -49,15 +44,7 @@ public class VehicleModelServiceImpl implements VehicleModelService {
         modelRepository.save(model);
     }
 
-    private VehicleBrand getBrand(String brandName) throws ValueNotFoundException{
-        VehicleBrandRequest brandRequest = new VehicleBrandRequest();
-        brandRequest.setBrandName(brandRequest.getBrandName());
-        return brandService.findByBrandName(brandRequest);
-    }
-
-    private VehicleModelResponse mapToResponse(VehicleModel model) {
-        VehicleModelResponse response = new VehicleModelResponse();
-        response.setModelName(model.getName());
-        return response;
+    private VehicleBrand getBrand(String brandName) throws ValueNotFoundException {
+        return brandService.findByName(brandName);
     }
 }

@@ -2,7 +2,7 @@ package ru.egartech.vehicleapp.api.request;
 
 import lombok.Data;
 
-import java.util.Date;
+import java.time.LocalDate;
 
 @Data
 public class VehicleRequest {
@@ -11,6 +11,6 @@ public class VehicleRequest {
     private String type;
     private String category;
     private String regNumber;
-    private Date prodYear;
-    private boolean hasTrailer;
+    private LocalDate prodYear;
+    private String hasTrailer;
 }

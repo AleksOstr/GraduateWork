@@ -2,6 +2,7 @@ package ru.egartech.vehicleapp.service.response;
 
 import lombok.Data;
 
+import java.time.LocalDate;
 import java.util.UUID;
 
 @Data
@@ -12,6 +13,6 @@ public class VehicleResponse {
     private String type;
     private String category;
     private String regNumber;
-    private String prodYear;
-    private boolean hasTrailer;
+    private LocalDate prodYear;
+    private String hasTrailer;
 }
