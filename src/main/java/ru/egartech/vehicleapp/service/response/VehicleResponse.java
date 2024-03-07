@@ -13,6 +13,6 @@ public class VehicleResponse {
     private String type;
     private String category;
     private String regNumber;
-    private LocalDate prodYear;
+    private int prodYear;
     private String hasTrailer;
 }
