@@ -1,6 +1,7 @@
 package ru.egartech.vehicleapp.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.stereotype.Repository;
 import ru.egartech.vehicleapp.model.*;
 
@@ -13,7 +14,7 @@ import java.util.UUID;
  * Репозиторий ТС
  */
 @Repository
-public interface VehicleRepository extends JpaRepository<Vehicle, UUID> {
+public interface VehicleRepository extends JpaRepository<Vehicle, UUID>, JpaSpecificationExecutor<Vehicle> {
 
     Optional<Vehicle> findByRegNumberIgnoreCase(String regNumber);
 
