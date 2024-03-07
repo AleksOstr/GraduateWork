@@ -41,8 +41,7 @@ public class Vehicle {
 
     // Год выпуска
     @Column(name = "prod_year")
-    @DateTimeFormat(pattern = "YYYY")
-    private LocalDate prodYear;
+    private int prodYear;
 
     // Наличие прицепа
     @Column(name = "has_trailer")
