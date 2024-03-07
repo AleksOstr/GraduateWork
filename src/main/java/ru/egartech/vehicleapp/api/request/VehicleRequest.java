@@ -11,6 +11,6 @@ public class VehicleRequest {
     private String type;
     private String category;
     private String regNumber;
-    private LocalDate prodYear;
+    private String prodYear;
     private String hasTrailer;
 }
