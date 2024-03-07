@@ -6,9 +6,12 @@ import lombok.Data;
 import java.util.List;
 import java.util.UUID;
 
+/**
+ * Модель ТС
+ */
 @Entity
 @Data
-// Модель ТС
+@Table(name = "model")
 public class VehicleModel {
 
     @Id
@@ -22,7 +25,7 @@ public class VehicleModel {
     @JoinColumn(nullable = false)
     private VehicleBrand brand;
 
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY,
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER,
     mappedBy = "model")
     private List<Vehicle> vehicles;
 }

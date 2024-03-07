@@ -7,7 +7,10 @@ import ru.egartech.vehicleapp.model.VehicleCategory;
 import java.util.Optional;
 import java.util.UUID;
 
+/**
+ * Репозиторий категорий ТС
+ */
 @Repository
 public interface VehicleCategoryRepository extends JpaRepository<VehicleCategory, UUID> {
-    Optional<VehicleCategory> findByCategoryNameIgnoreCase(String categoryName);
+    Optional<VehicleCategory> findByNameIgnoreCase(String categoryName);
 }

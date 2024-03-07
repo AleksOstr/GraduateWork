@@ -1,14 +1,28 @@
 package ru.egartech.vehicleapp.service.interfaces;
 
-import ru.egartech.vehicleapp.api.request.VehicleBrandRequest;
 import ru.egartech.vehicleapp.model.VehicleBrand;
-import ru.egartech.vehicleapp.service.response.VehicleBrandResponse;
 
+/**
+ * Сервис марок ТС
+ */
 public interface VehicleBrandService {
+    /**
+     * Создание новой марки
+     * @param brandName - имя марки ТС
+     * @return VehicleBrand - сущность марки ТС
+     */
+    VehicleBrand create(String brandName);
 
-    VehicleBrandResponse create(VehicleBrandRequest request);
+    /**
+     * Поиск марки по имени
+     * @param brandName - имя марки ТС
+     * @return VehicleBrand - сущность марки ТС
+     */
+    VehicleBrand findByName(String brandName);
 
-    VehicleBrand findByBrandName(VehicleBrandRequest request);
-
+    /**
+     * Обновление марки в репозитории
+     * @param brand - сущность марки ТС
+     */
     void updateBrand(VehicleBrand brand);
 }

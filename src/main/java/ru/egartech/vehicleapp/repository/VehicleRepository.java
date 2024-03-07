@@ -9,15 +9,12 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
+/**
+ * Репозиторий ТС
+ */
 @Repository
 public interface VehicleRepository extends JpaRepository<Vehicle, UUID> {
 
-    List<Vehicle> findAllByBrand(VehicleBrand brand);
-    List<Vehicle> findAllByModel(VehicleModel model);
-    List<Vehicle> findAllByType(VehicleType type);
-    List<Vehicle> findAllByCategory(VehicleCategory category);
-    List<Vehicle> findAllByProdYear(Date prodYear);
-    List<Vehicle> findAllByHasTrailer(boolean hasTrailer);
     Optional<Vehicle> findByRegNumberIgnoreCase(String regNumber);
 
 }
