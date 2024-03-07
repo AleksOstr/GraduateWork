@@ -15,13 +15,14 @@ public class VehicleModel {
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
-    @Column(name = "model_name")
-    private String modelName;
+    @Column(name = "name")
+    private String name;
 
     @ManyToOne(cascade = CascadeType.REFRESH, fetch = FetchType.EAGER)
     @JoinColumn(nullable = false)
     private VehicleBrand brand;
 
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY,
+    mappedBy = "model")
     private List<Vehicle> vehicles;
 }

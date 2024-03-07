@@ -15,9 +15,10 @@ public class VehicleCategory {
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
-    @Column(name = "category_name", nullable = false)
-    private String categoryName;
+    @Column(name = "name", nullable = false)
+    private String name;
 
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY,
+    mappedBy = "category")
     private List<Vehicle> vehicles;
 }

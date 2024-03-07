@@ -15,9 +15,10 @@ public class VehicleType {
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
-    @Column(name = "type_name")
-    private String typeName;
+    @Column(name = "name")
+    private String name;
 
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY,
+    mappedBy = "type")
     private List<Vehicle> vehicles;
 }

@@ -15,8 +15,8 @@ public class VehicleBrand {
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
-    @Column(name = "brand_name", nullable = false)
-    private String brandName;
+    @Column(name = "name", nullable = false)
+    private String name;
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY,
     mappedBy = "brand")
