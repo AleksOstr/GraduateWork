@@ -13,5 +13,5 @@ public interface VehicleService {
 
     VehicleResponse update(VehicleRequest request, UUID id);
 
-    List<VehicleResponse> findByExample(VehicleRequest request);
+    List<VehicleResponse> findAllByRequest(VehicleRequest request);
 }
