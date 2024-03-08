@@ -13,5 +13,7 @@ public interface VehicleService {
 
     VehicleResponse update(VehicleRequest request, UUID id);
 
+    List<VehicleResponse> findAll();
+
     List<VehicleResponse> findAllByRequest(VehicleRequest request);
 }
