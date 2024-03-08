@@ -16,6 +16,8 @@ import ru.egartech.vehicleapp.specification.VehicleSpecification;
 import java.util.List;
 import java.util.UUID;
 
+import static ru.egartech.vehicleapp.specification.VehicleSpecification.*;
+
 @Service
 @RequiredArgsConstructor
 public class VehicleServiceImpl implements VehicleService {
@@ -85,11 +87,13 @@ public class VehicleServiceImpl implements VehicleService {
     }
 
     @Override
-    public List<VehicleResponse> findByExample(VehicleRequest request) {
+    public List<VehicleResponse> findAllByRequest(VehicleRequest request) {
         Specification<Vehicle> specification =
-                VehicleSpecification.byBrandName(request.getBrand())
-                        .and(VehicleSpecification.byProdYear(request.getProdYear()))
-                        .and(VehicleSpecification.byHasTrialer(request.getHasTrailer()));
+                VehicleSpecification.byBrand(request.getBrand())
+                        .and(byModel(request.getModel()))
+                        .and(byCategory(request.getCategory()))
+                        .and(byRegNumber(request.getRegNumber()))
+                        .and(byProdYear(request.getProdYear()));
         return vehicleRepository.findAll(specification).stream().map(this::mapToResponse).toList();
     }
 
