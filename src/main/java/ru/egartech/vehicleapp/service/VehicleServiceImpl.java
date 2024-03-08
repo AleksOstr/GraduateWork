@@ -11,6 +11,7 @@ import ru.egartech.vehicleapp.model.*;
 import ru.egartech.vehicleapp.repository.VehicleRepository;
 import ru.egartech.vehicleapp.service.interfaces.*;
 import ru.egartech.vehicleapp.service.response.VehicleResponse;
+import ru.egartech.vehicleapp.service.response.VehicleTypeResponse;
 import ru.egartech.vehicleapp.specification.VehicleSpecification;
 
 import java.util.List;
@@ -87,6 +88,11 @@ public class VehicleServiceImpl implements VehicleService {
     }
 
     @Override
+    public List<VehicleResponse> findAll() {
+        return vehicleRepository.findAll().stream().map(this::mapToResponse).toList();
+    }
+
+    @Override
     public List<VehicleResponse> findAllByRequest(VehicleRequest request) {
         Specification<Vehicle> specification =
                 VehicleSpecification.byBrand(request.getBrand())
@@ -95,6 +101,11 @@ public class VehicleServiceImpl implements VehicleService {
                         .and(byRegNumber(request.getRegNumber()))
                         .and(byProdYear(request.getProdYear()));
         return vehicleRepository.findAll(specification).stream().map(this::mapToResponse).toList();
+    }
+
+    @Override
+    public List<VehicleTypeResponse> getTypes() {
+        return typeService.findAll();
     }
 
     private VehicleResponse mapToResponse(Vehicle vehicle) {
