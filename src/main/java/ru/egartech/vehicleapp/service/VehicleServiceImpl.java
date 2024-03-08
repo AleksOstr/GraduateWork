@@ -126,8 +126,8 @@ public class VehicleServiceImpl implements VehicleService {
 
     private void checkRegNumber(VehicleRequest request) {
         if (vehicleRepository.findByRegNumberIgnoreCase(request.getRegNumber()).isPresent()) {
-            throw new ExistingValueException("Vehicle with registration number: " + request.getRegNumber() +
-                    " already exists");
+            throw new ExistingValueException("Транспортное средство с гос. номером: " + request.getRegNumber() +
+                    " уже существует");
         }
     }
 

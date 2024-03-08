@@ -19,7 +19,7 @@ public class InitH2Data implements CommandLineRunner {
         createType("Легковой");
         createType("Грузовой");
 
-        createVehicle("LADA", "Vesta", "Легковой", "M", "A001AA123", "2020",
+        createVehicle("LADA", "Vesta", "Легковой", "M", "А001АА123", "2020",
                 "нет");
         createVehicle("LADA", "2112", "Легковой", "M", "Р123КУ123", "2007",
                 "да");
