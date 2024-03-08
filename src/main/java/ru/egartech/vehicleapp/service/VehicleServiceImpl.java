@@ -3,6 +3,7 @@ package ru.egartech.vehicleapp.service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
+import ru.egartech.vehicleapp.api.request.SearchRequest;
 import ru.egartech.vehicleapp.api.request.VehicleRequest;
 import ru.egartech.vehicleapp.exceptions.ExistingValueException;
 import ru.egartech.vehicleapp.exceptions.NullValueException;
@@ -31,7 +32,6 @@ public class VehicleServiceImpl implements VehicleService {
 
     @Override
     public VehicleResponse create(VehicleRequest request) throws ExistingValueException, NullValueException {
-        validateRequest(request);
         checkRegNumber(request);
 
         Vehicle vehicle = new Vehicle();
@@ -48,9 +48,8 @@ public class VehicleServiceImpl implements VehicleService {
     }
 
     @Override
-    public VehicleResponse update(VehicleRequest request, UUID id) {
-        Vehicle vehicle = vehicleRepository.findById(id).orElseThrow();
-        validateRequest(request);
+    public VehicleResponse update(VehicleRequest request, String regNumber) {
+        Vehicle vehicle = vehicleRepository.findByRegNumberIgnoreCase(regNumber).orElseThrow();
         if (!request.getRegNumber().equalsIgnoreCase(vehicle.getRegNumber())) {
             checkRegNumber(request);
             vehicle.setRegNumber(request.getRegNumber());
@@ -93,14 +92,18 @@ public class VehicleServiceImpl implements VehicleService {
     }
 
     @Override
-    public List<VehicleResponse> findAllByRequest(VehicleRequest request) {
-        Specification<Vehicle> specification =
-                VehicleSpecification.byBrand(request.getBrand())
-                        .and(byModel(request.getModel()))
-                        .and(byCategory(request.getCategory()))
-                        .and(byRegNumber(request.getRegNumber()))
-                        .and(byProdYear(request.getProdYear()));
-        return vehicleRepository.findAll(specification).stream().map(this::mapToResponse).toList();
+    public List<VehicleResponse> findAllByRequest(SearchRequest request) {
+        final Specification<Vehicle> specification = new VehicleSpecification(request);
+        return vehicleRepository.findAll(specification)
+                .stream()
+                .map(this::mapToResponse)
+                .toList();
+    }
+
+    @Override
+    public VehicleResponse findByRegNumber(String regNumber) {
+        Vehicle vehicle = vehicleRepository.findByRegNumberIgnoreCase(regNumber).orElseThrow();
+        return mapToResponse(vehicle);
     }
 
     @Override
@@ -124,17 +127,7 @@ public class VehicleServiceImpl implements VehicleService {
     private void checkRegNumber(VehicleRequest request) {
         if (vehicleRepository.findByRegNumberIgnoreCase(request.getRegNumber()).isPresent()) {
             throw new ExistingValueException("Vehicle with registration number: " + request.getRegNumber() +
-                    "already exists");
-        }
-    }
-
-    private void validateRequest(VehicleRequest request) {
-        if (
-                request.getBrand().isEmpty() || request.getModel().isEmpty() || request.getCategory().isEmpty() ||
-                        request.getType().isEmpty() || request.getRegNumber().isEmpty() || request.getProdYear() == null ||
-                        request.getHasTrailer().isEmpty()
-        ) {
-            throw new NullValueException("All fields of request must be filled");
+                    " already exists");
         }
     }
 
