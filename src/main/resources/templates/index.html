@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Vehicles</title>
+</head>
+<body>
+<span>Список ТС</span>
+<span th:if="${#lists.isEmpty(responses)}"> Записей не найдено</span>
+<table th:if="${not #lists.isEmpty(responses)}">
+    <thead>
+    <tr>
+        <th>Марка</th>
+        <th>Модель</th>
+        <th>Категория</th>
+        <th>Тип</th>
+        <th>Год выпуска</th>
+        <th>Гос.номер</th>
+        <th>Прицеп</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="response : ${responses}">
+        <td th:text="${response.getBrand()}"></td>
+        <td th:text="${response.getModel()}"></td>
+        <td th:text="${response.getCategory()}"></td>
+        <td th:text="${response.getType()}"></td>
+        <td th:text="${response.getProdYear()}"></td>
+        <td th:text="${response.getRegNumber()}"></td>
+        <td th:text="${response.getHasTrailer()}"></td>
+        <td>
+            <form th:method="GET" th:action="@{/vehicle/update/{regNumber}(regNumber=${response.getRegNumber()})}" >
+                <input type="submit" value="Редактировать">
+            </form></td>
+    </tr>
+    </tbody>
+</table>
+
+<form th:method="GET" th:action="@{/vehicle/new}">
+    <input type="submit" value="Добавить запись">
+</form>
+<form th:method="GET" th:action="@{/vehicle}">
+    <input type="submit" value="Сбросить фильтрацию">
+</form><br>
+
+<span>Поиск</span>
+<form th:method="GET" th:action="@{/vehicle/filter}" th:object="${request}">
+    <label for="brand">Марка</label>
+    <input type="text" th:field="*{brand}" id="brand"/><br>
+    <label for="model">Модель</label>
+    <input type="text" th:field="*{model}" id="model"/><br>
+    <label for="category">Категория</label>
+    <input type="text" th:field="*{category}" id="category"/><br>
+    <label for="regNumber">Гос. номер</label>
+    <input type="text" th:field="*{regNumber}" id="regNumber"/><br>
+    <label for="prodYear">Год выпуска</label>
+    <select id="prodYear" th:field="*{prodYear}">
+        <option th:value="${null}" th:text="Все"></option>
+        <option th:each="year : ${#numbers.sequence(#dates.year(#dates.createNow()), 1900)}"
+                th:value="${year}" th:text="${year}">
+        </option>
+    </select><br>
+    <input type="submit" value="Искать">
+    <br>
+</form>
+</body>
+</html>

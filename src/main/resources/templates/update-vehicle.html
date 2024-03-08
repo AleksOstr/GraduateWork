@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Title</title>
+</head>
+<body>
+<span>Текущие данные о ТС</span>
+<table>
+    <thead>
+    <tr>
+        <th>Марка</th>
+        <th>Модель</th>
+        <th>Категория</th>
+        <th>Тип</th>
+        <th>Год выпуска</th>
+        <th>Гос.номер</th>
+        <th>Прицеп</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr >
+        <td th:text="${vehicle.getBrand()}"></td>
+        <td th:text="${vehicle.getModel()}"></td>
+        <td th:text="${vehicle.getCategory()}"></td>
+        <td th:text="${vehicle.getType()}"></td>
+        <td th:text="${vehicle.getProdYear()}"></td>
+        <td th:text="${vehicle.getRegNumber()}"></td>
+        <td th:text="${vehicle.getHasTrailer()}"></td>
+        <td>
+    </tr>
+    </tbody>
+</table>
+<br>
+<span>Обновить данные ТС</span>
+<form th:method="PATCH" th:action="@{/vehicle/update/{regNumber}(regNumber=${oldRegNumber})}" th:object="${request}">
+    <label for="brand">Марка</label>
+    <input type="text" th:field="*{brand}" id="brand"/><br>
+
+    <label for="model">Модель</label>
+    <input type="text" th:field="*{model}" id="model"/><br>
+
+    <label for="category">Категория</label>
+    <input type="text" th:field="*{category}" id="category"/><br>
+
+    <label for="type">Тип ТС</label>
+    <select id="type" th:field="*{type}">
+        <option th:each="type : ${types}"
+                th:value="${type.getTypeName()}" th:text="${type.getTypeName()}">
+        </option>
+    </select><br>
+
+    <label for="regNumber">Гос. номер</label>
+    <input type="text" th:field="*{regNumber}" id="regNumber"/><br>
+
+    <label for="prodYear">Год выпуска</label>
+    <select id="prodYear" th:field="*{prodYear}">
+        <option th:value="${null}" th:text="Все"></option>
+        <option th:each="year : ${#numbers.sequence(#dates.year(#dates.createNow()), 1900)}"
+                th:value="${year}" th:text="${year}">
+        </option>
+    </select><br>
+
+    <label for="hasTrailer">Наличие прицепа</label>
+    <select id="hasTrailer" th:field="*{hasTrailer}">
+        <option th:value="да" th:text="да"></option>
+        <option th:value="нет" th:text="нет"></option>
+    </select><br>
+    <input type="submit" value="Обновить">
+    <br>
+</form>
+<form th:method="GET" th:action="@{/vehicle}">
+    <input type="submit" value="Отменить">
+</form>
+</body>
+</html>

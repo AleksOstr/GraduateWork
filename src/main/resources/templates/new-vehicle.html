@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>New vehicle</title>
+</head>
+<body>
+<span>Добавить новое ТС</span>
+<form th:method="POST" th:action="@{/vehicle/new}" th:object="${request}">
+    <label for="brand">Марка</label>
+    <input type="text" th:field="*{brand}" id="brand" required/><br>
+
+    <label for="model">Модель</label>
+    <input type="text" th:field="*{model}" id="model" required/><br>
+
+    <label for="category">Категория</label>
+    <input type="text" th:field="*{category}" id="category" required/><br>
+
+    <label for="type">Тип ТС</label>
+    <select id="type" th:field="*{type}" required>
+        <option th:each="type : ${types}"
+        th:value="${type.getTypeName()}" th:text="${type.getTypeName()}">
+        </option>
+    </select><br>
+
+    <label for="regNumber">Гос. номер</label>
+    <input type="text" th:field="*{regNumber}" id="regNumber" required/><br>
+
+    <label for="prodYear">Год выпуска</label>
+    <select id="prodYear" th:field="*{prodYear}" required>
+        <option th:each="year : ${#numbers.sequence(#dates.year(#dates.createNow()), 1900)}"
+                th:value="${year}" th:text="${year}">
+        </option>
+    </select><br>
+
+    <label for="hasTrailer">Наличие прицепа</label>
+    <select id="hasTrailer" th:field="*{hasTrailer}" required>
+        <option th:value="да" th:text="да"></option>
+        <option th:value="нет" th:text="нет"></option>
+    </select><br>
+    <input type="submit" value="Добавить">
+    <br>
+</form>
+<form th:method="GET" th:action="@{/vehicle}">
+    <input type="submit" value="Отменить">
+</form>
+</body>
+</html>
