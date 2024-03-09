@@ -16,6 +16,11 @@ import java.util.UUID;
 @Repository
 public interface VehicleRepository extends JpaRepository<Vehicle, UUID>, JpaSpecificationExecutor<Vehicle> {
 
+    /**
+     * Поиск ТС по гос. номеру с игнорированием регистра
+     * @param regNumber - гос. номер ТС
+     * @return - ТС
+     */
     Optional<Vehicle> findByRegNumberIgnoreCase(String regNumber);
 
 }
