@@ -9,7 +9,6 @@ import org.springframework.web.bind.annotation.*;
 import ru.egartech.vehicleapp.api.request.SearchRequest;
 import ru.egartech.vehicleapp.api.request.VehicleRequest;
 import ru.egartech.vehicleapp.exceptions.ExistingValueException;
-import ru.egartech.vehicleapp.exceptions.ValueNotFoundException;
 import ru.egartech.vehicleapp.service.interfaces.VehicleService;
 import ru.egartech.vehicleapp.service.response.VehicleResponse;
 
