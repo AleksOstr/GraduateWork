@@ -6,7 +6,6 @@ import ru.egartech.vehicleapp.service.response.VehicleResponse;
 import ru.egartech.vehicleapp.service.response.VehicleTypeResponse;
 
 import java.util.List;
-import java.util.UUID;
 
 public interface VehicleService {
 
