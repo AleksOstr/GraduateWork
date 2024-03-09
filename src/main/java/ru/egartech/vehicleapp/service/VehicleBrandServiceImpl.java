@@ -16,7 +16,11 @@ public class VehicleBrandServiceImpl implements VehicleBrandService {
 
     private final VehicleBrandRepository brandRepository;
     @Override
-    public VehicleBrand create(String brandName) throws ExistingValueException{
+    public VehicleBrand create(String brandName) throws ExistingValueException {
+        if (brandRepository.findByNameIgnoreCase(brandName).isPresent()) {
+            throw new ExistingValueException("Brand with name: " + brandName +
+                    " already exists");
+        }
         VehicleBrand brand = new VehicleBrand();
         brand.setName(brandName);
         brand.setVehicles(new ArrayList<>());
