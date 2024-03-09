@@ -12,5 +12,11 @@ import java.util.UUID;
  */
 @Repository
 public interface VehicleTypeRepository extends JpaRepository<VehicleType, UUID> {
+
+    /**
+     * Поиск типа ТС по имени с игнорированием регистра
+     * @param name - имя типа ТС
+     * @return - тип ТС
+     */
     Optional<VehicleType> findByNameIgnoreCase(String name);
 }
