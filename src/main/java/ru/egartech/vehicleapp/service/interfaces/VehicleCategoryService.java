@@ -22,7 +22,7 @@ public interface VehicleCategoryService {
     VehicleCategory findByName(String categoryName);
 
     /**
-     * Обновление категории ТС
+     * Обновление категории ТС в репозитории
      * @param category - категория ТС
      */
     void updateCategory(VehicleCategory category);
