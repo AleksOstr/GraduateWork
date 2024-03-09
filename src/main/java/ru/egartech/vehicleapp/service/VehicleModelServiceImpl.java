@@ -21,6 +21,10 @@ public class VehicleModelServiceImpl implements VehicleModelService {
 
     @Override
     public VehicleModel create(String brandName, String modelName) throws ExistingValueException {
+        if (modelRepository.findByNameIgnoreCase(modelName).isPresent()) {
+            throw new ExistingValueException("Model with name: " + modelName +
+                    " already exists");
+        }
         VehicleBrand brand = getBrand(brandName);
         VehicleModel model = new VehicleModel();
         model.setName(modelName);
