@@ -26,7 +26,7 @@ public interface VehicleTypeService {
 
     /**
      * Получение всех типов ТС из БД
-     * @return List<VehicleTypeResponse> - список типов ТС
+     * @return List - список типов ТС
      */
     List<VehicleTypeResponse> findAll();
 
