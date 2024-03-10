@@ -41,8 +41,8 @@ public class VehicleModelServiceImpl implements VehicleModelService {
     }
 
     @Override
-    public void updateModel(VehicleModel model) {
-        modelRepository.save(model);
+    public VehicleModel updateModel(VehicleModel model) {
+        return modelRepository.save(model);
     }
 
     private VehicleBrand getBrand(String brandName) throws ValueNotFoundException {
