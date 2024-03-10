@@ -73,7 +73,7 @@ public class VehicleController {
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public String handleException(MethodArgumentNotValidException e, Model model) {
-        String message = "Допускаются только государственные номера РФ формата А000АА000 (кириллица, " +
+        String message = "Допускаются только государственные номера РФ (кириллица, " +
                 "заглавные символы АВЕКМНОРСТУХ)";
         model.addAttribute("message", message);
         return "error";
