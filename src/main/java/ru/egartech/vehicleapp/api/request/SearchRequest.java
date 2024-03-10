@@ -2,6 +2,9 @@ package ru.egartech.vehicleapp.api.request;
 
 import lombok.Data;
 
+/**
+ *  request-объект с параметрами поиска ТС
+ */
 @Data
 public class SearchRequest {
     private String brand;
