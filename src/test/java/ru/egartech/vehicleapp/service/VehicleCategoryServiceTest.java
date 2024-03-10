@@ -5,6 +5,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import ru.egartech.vehicleapp.exceptions.ExistingValueException;
+import ru.egartech.vehicleapp.exceptions.ValueNotFoundException;
 import ru.egartech.vehicleapp.model.VehicleCategory;
 import ru.egartech.vehicleapp.repository.VehicleCategoryRepository;
 import ru.egartech.vehicleapp.service.interfaces.VehicleCategoryService;
@@ -55,6 +56,14 @@ public class VehicleCategoryServiceTest {
         Assertions.assertEquals(saved.getName(), found.getName());
 
         repository.delete(saved);
+    }
+
+    @Test
+    void findByNameExceptionTest() {
+        Exception exception = Assertions.assertThrows(ValueNotFoundException.class, () -> service.findByName("name"));
+        String message = exception.getMessage();
+
+        Assertions.assertEquals("Category with name: name not found", message);
     }
 
     @Test
