@@ -169,6 +169,11 @@ public class VehicleServiceImpl implements VehicleService {
         }
     }
 
+    /**
+     * Установка марки ТС
+     * @param brandName имя ямарки ТС
+     * @param vehicle сущность ТС
+     */
     private void setBrand(String brandName, Vehicle vehicle) {
         try {
             VehicleBrand brand = brandService.findByName(brandName);
@@ -182,6 +187,12 @@ public class VehicleServiceImpl implements VehicleService {
         }
     }
 
+    /**
+     * Установка модели ТС
+     * @param modelName имя модели ТС
+     * @param brandName имя марки ТС
+     * @param vehicle сущность ТС
+     */
     private void setModel(String modelName, String brandName, Vehicle vehicle) {
         try {
             VehicleModel model = modelService.findByName(modelName);
@@ -195,6 +206,11 @@ public class VehicleServiceImpl implements VehicleService {
         }
     }
 
+    /**
+     * Установка типа ТС
+     * @param typeName тип ТС
+     * @param vehicle сущность ТС
+     */
     private void setType(String typeName, Vehicle vehicle) {
         try {
             VehicleType type = typeService.findByName(typeName);
@@ -208,6 +224,11 @@ public class VehicleServiceImpl implements VehicleService {
         }
     }
 
+    /**
+     * Установка категории ТС
+     * @param categoryName категория ТС
+     * @param vehicle сущность ТС
+     */
     private void setCategory(String categoryName, Vehicle vehicle) {
         try {
             VehicleCategory category = categoryService.findByName(categoryName);
