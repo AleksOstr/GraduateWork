@@ -26,6 +26,6 @@ public interface VehicleModelService {
      * Обновление модели ТС
      * @param model - модель ТС
      */
-    void updateModel(VehicleModel model);
+    VehicleModel updateModel(VehicleModel model);
 
 }
