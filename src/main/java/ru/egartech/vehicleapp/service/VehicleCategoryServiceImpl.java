@@ -37,7 +37,7 @@ public class VehicleCategoryServiceImpl implements VehicleCategoryService {
 
 
     @Override
-    public void updateCategory(VehicleCategory category) {
-        categoryRepository.save(category);
+    public VehicleCategory updateCategory(VehicleCategory category) {
+        return categoryRepository.save(category);
     }
 }
