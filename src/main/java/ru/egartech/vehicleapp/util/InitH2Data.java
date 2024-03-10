@@ -16,8 +16,12 @@ public class InitH2Data implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
+        if (!typeService.findAll().isEmpty()) {
+            return;
+        }
         createType("Легковой");
         createType("Грузовой");
+        createType("Мотоцикл");
 
         createVehicle("LADA", "Vesta", "Легковой", "M", "А001АА123", "2020",
                 "нет");
