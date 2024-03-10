@@ -5,6 +5,9 @@ import lombok.Data;
 import java.time.LocalDate;
 import java.util.UUID;
 
+/**
+ * response-объект с параметрами ТС
+ */
 @Data
 public class VehicleResponse {
     private UUID id;
