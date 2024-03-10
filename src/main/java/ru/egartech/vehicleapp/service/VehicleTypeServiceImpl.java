@@ -29,7 +29,7 @@ public class VehicleTypeServiceImpl implements VehicleTypeService {
     @Override
     public VehicleType create(String typeName) throws ExistingValueException {
         if (typeRepository.findByNameIgnoreCase(typeName).isPresent()) {
-            throw new ExistingValueException("Category with name: " + typeName +
+            throw new ExistingValueException("Type with name: " + typeName +
                     " already exists");
         }
         VehicleType type = new VehicleType();
