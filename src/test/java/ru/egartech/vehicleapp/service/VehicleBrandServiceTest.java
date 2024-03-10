@@ -40,6 +40,8 @@ public class VehicleBrandServiceTest {
         String message = exception.getMessage();
 
         Assertions.assertEquals("Brand with name: brand already exists", message);
+
+        repository.delete(brand);
     }
 
     @Test
