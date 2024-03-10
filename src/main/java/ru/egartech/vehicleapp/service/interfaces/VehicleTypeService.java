@@ -34,5 +34,5 @@ public interface VehicleTypeService {
      * Оновление типа ТС
      * @param type - тип ТС
      */
-    void updateType(VehicleType type);
+    VehicleType updateType(VehicleType type);
 }
