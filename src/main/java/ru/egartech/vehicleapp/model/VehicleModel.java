@@ -25,7 +25,7 @@ public class VehicleModel {
     @JoinColumn(nullable = false)
     private VehicleBrand brand;
 
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER,
+    @OneToMany(cascade = CascadeType.REMOVE, fetch = FetchType.EAGER,
     mappedBy = "model")
     private List<Vehicle> vehicles;
 }

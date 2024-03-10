@@ -21,7 +21,7 @@ public class VehicleType {
     @Column(name = "name")
     private String name;
 
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER,
+    @OneToMany(cascade = CascadeType.REMOVE, fetch = FetchType.EAGER,
     mappedBy = "type")
     private List<Vehicle> vehicles;
 }
