@@ -16,9 +16,6 @@ import ru.egartech.vehicleapp.service.response.VehicleTypeResponse;
 import ru.egartech.vehicleapp.specification.VehicleSpecification;
 
 import java.util.List;
-import java.util.UUID;
-
-import static ru.egartech.vehicleapp.specification.VehicleSpecification.*;
 
 @Service
 @RequiredArgsConstructor
