@@ -12,12 +12,20 @@ import ru.egartech.vehicleapp.service.response.VehicleTypeResponse;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Сервис типов ТС
+ */
 @Service
 @RequiredArgsConstructor
 public class VehicleTypeServiceImpl implements VehicleTypeService {
 
     private final VehicleTypeRepository typeRepository;
 
+    /**
+     * Создание нового типа ТС
+     * @param typeName - имя типа ТС
+     * @return - VehicleType - сущность типа ТС
+     */
     @Override
     public VehicleType create(String typeName) throws ExistingValueException {
         if (typeRepository.findByNameIgnoreCase(typeName).isPresent()) {
@@ -30,23 +38,41 @@ public class VehicleTypeServiceImpl implements VehicleTypeService {
         return typeRepository.save(type);
     }
 
+    /**
+     * Пооиск типа ТС по имени
+     * @param typeName - имя типа ТС
+     * @return - VehicleType - сущность типа ТС
+     */
     @Override
     public VehicleType findByName(String typeName) throws ValueNotFoundException {
         return typeRepository.findByNameIgnoreCase(typeName)
                 .orElseThrow(() -> new ValueNotFoundException("Type with name: " + typeName + " not found"));
     }
 
+    /**
+     * Получение всех типов ТС из БД
+     * @return List - список типов ТС
+     */
     @Override
     public List<VehicleTypeResponse> findAll() {
         List<VehicleType> types = typeRepository.findAll();
         return types.stream().map(this::mapToResponse).toList();
     }
 
+    /**
+     * Оновление типа ТС
+     * @param type - тип ТС
+     */
     @Override
     public VehicleType updateType(VehicleType type) {
         return typeRepository.save(type);
     }
 
+    /**
+     * Маппер VehicleType в VehicleTypeResponse
+     * @param type тип ТС
+     * @return response-объект с параметрами типа ТС
+     */
     private VehicleTypeResponse mapToResponse(VehicleType type) {
         VehicleTypeResponse response = new VehicleTypeResponse();
         response.setTypeName(type.getName());
