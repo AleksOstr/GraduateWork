@@ -22,7 +22,7 @@ public class VehicleRequest {
     private String category;
 
     @NotNull
-    @Pattern(regexp = "[АВЕКМНОРСТУХ]\\d{3}(?<!000)[АВЕКМНОРСТУХ]{2}\\d{2,3}$")
+    @Pattern(regexp = "[АВЕКМНОРСТУХ]?\\d{3,4}(?<!000)[АВЕКМНОРСТУХ]{2}\\d{2,3}$")
     private String regNumber;
 
     @NotNull
