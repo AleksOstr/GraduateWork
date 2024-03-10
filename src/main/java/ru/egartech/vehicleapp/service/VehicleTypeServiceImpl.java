@@ -43,8 +43,8 @@ public class VehicleTypeServiceImpl implements VehicleTypeService {
     }
 
     @Override
-    public void updateType(VehicleType type) {
-        typeRepository.save(type);
+    public VehicleType updateType(VehicleType type) {
+        return typeRepository.save(type);
     }
 
     private VehicleTypeResponse mapToResponse(VehicleType type) {
