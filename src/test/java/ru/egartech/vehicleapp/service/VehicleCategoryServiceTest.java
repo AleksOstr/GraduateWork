@@ -1,6 +1,7 @@
 package ru.egartech.vehicleapp.service;
 
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -28,8 +29,6 @@ public class VehicleCategoryServiceTest {
 
         Assertions.assertNotNull(actual.getId());
         Assertions.assertEquals(expectedName, actual.getName());
-
-        repository.delete(actual);
     }
 
     @Test
@@ -43,8 +42,6 @@ public class VehicleCategoryServiceTest {
         String message = exception.getMessage();
 
         Assertions.assertEquals("Category with name: category already exists", message);
-
-        repository.delete(category);
     }
 
     @Test
@@ -56,8 +53,6 @@ public class VehicleCategoryServiceTest {
 
         Assertions.assertEquals(saved.getId(), found.getId());
         Assertions.assertEquals(saved.getName(), found.getName());
-
-        repository.delete(saved);
     }
 
     @Test
@@ -78,7 +73,10 @@ public class VehicleCategoryServiceTest {
         Assertions.assertEquals(saved.getId(), updated.getId());
         Assertions.assertEquals(saved.getName(), updated.getName());
         Assertions.assertNotEquals(oldName, updated.getName());
+    }
 
-        repository.delete(updated);
+    @BeforeEach
+    void cleanDB() {
+        repository.deleteAll();
     }
 }
