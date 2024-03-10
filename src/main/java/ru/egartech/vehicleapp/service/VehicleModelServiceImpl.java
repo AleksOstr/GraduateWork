@@ -12,6 +12,9 @@ import ru.egartech.vehicleapp.service.interfaces.VehicleModelService;
 
 import java.util.ArrayList;
 
+/**
+ * Сервис моделей ТС
+ */
 @Service
 @RequiredArgsConstructor
 public class VehicleModelServiceImpl implements VehicleModelService {
@@ -19,6 +22,12 @@ public class VehicleModelServiceImpl implements VehicleModelService {
     private final VehicleModelRepository modelRepository;
     private final VehicleBrandService brandService;
 
+    /**
+     * Создание новой модели ТС
+     * @param brandName - имя марки ТС
+     * @param modelName - имя модели ТС
+     * @return - VehicleModel сущность модели ТС
+     */
     @Override
     public VehicleModel create(String brandName, String modelName) throws ExistingValueException {
         if (modelRepository.findByNameIgnoreCase(modelName).isPresent()) {
@@ -34,17 +43,32 @@ public class VehicleModelServiceImpl implements VehicleModelService {
         return modelRepository.save(model);
     }
 
+    /**
+     * Поиск модели ТС по имени
+     * @param modelName - имя модепли ТС
+     * @return - VehicleModel сущность модели ТС
+     */
     @Override
     public VehicleModel findByName(String modelName) throws ValueNotFoundException {
         return modelRepository.findByNameIgnoreCase(modelName)
                 .orElseThrow(() -> new ValueNotFoundException("Model with name: " + modelName + " not found"));
     }
 
+    /**
+     * Обновление модели ТС
+     * @param model - модель ТС
+     */
     @Override
     public VehicleModel updateModel(VehicleModel model) {
         return modelRepository.save(model);
     }
 
+    /**
+     * Получение марки ТС по имени
+     * @param brandName имя марки ТС
+     * @return марка ТС
+     * @throws ValueNotFoundException если марка ТС не найдена
+     */
     private VehicleBrand getBrand(String brandName) throws ValueNotFoundException {
         return brandService.findByName(brandName);
     }
