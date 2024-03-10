@@ -4,6 +4,9 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 import lombok.Data;
 
+/**
+ * request-объект с параметрами доабвления/изменения ТС
+ */
 @Data
 public class VehicleRequest {
     @NotNull
