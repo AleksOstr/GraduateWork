@@ -36,7 +36,7 @@ public class VehicleServiceImpl implements VehicleService {
      * @return - VehicleResponse - response-объект с параметрами созданного ТС
      */
     @Override
-    public VehicleResponse create(VehicleRequest request) throws ExistingValueException, NullValueException {
+    public VehicleResponse create(VehicleRequest request) throws ExistingValueException {
         checkRegNumber(request.getRegNumber());
 
         Vehicle vehicle = new Vehicle();
