@@ -25,6 +25,6 @@ public interface VehicleCategoryService {
      * Обновление категории ТС в репозитории
      * @param category - категория ТС
      */
-    void updateCategory(VehicleCategory category);
+    VehicleCategory updateCategory(VehicleCategory category);
 
 }
