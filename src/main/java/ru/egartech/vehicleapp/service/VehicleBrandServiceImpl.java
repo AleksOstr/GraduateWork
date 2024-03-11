@@ -53,7 +53,7 @@ public class VehicleBrandServiceImpl implements VehicleBrandService {
      * @param brand - сущность марки ТС
      */
     @Override
-    public VehicleBrand updateBrand(VehicleBrand brand) {
+    public VehicleBrand update(VehicleBrand brand) {
         return brandRepository.save(brand);
     }
 

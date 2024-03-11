@@ -24,5 +24,5 @@ public interface VehicleBrandService {
      * Обновление марки в репозитории
      * @param brand - сущность марки ТС
      */
-    VehicleBrand updateBrand(VehicleBrand brand);
+    VehicleBrand update(VehicleBrand brand);
 }

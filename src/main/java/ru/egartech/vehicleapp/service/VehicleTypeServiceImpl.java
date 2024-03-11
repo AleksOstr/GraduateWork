@@ -64,7 +64,7 @@ public class VehicleTypeServiceImpl implements VehicleTypeService {
      * @param type - тип ТС
      */
     @Override
-    public VehicleType updateType(VehicleType type) {
+    public VehicleType update(VehicleType type) {
         return typeRepository.save(type);
     }
 

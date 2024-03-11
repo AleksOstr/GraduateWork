@@ -59,7 +59,7 @@ public class VehicleModelServiceImpl implements VehicleModelService {
      * @param model - модель ТС
      */
     @Override
-    public VehicleModel updateModel(VehicleModel model) {
+    public VehicleModel update(VehicleModel model) {
         return modelRepository.save(model);
     }
 

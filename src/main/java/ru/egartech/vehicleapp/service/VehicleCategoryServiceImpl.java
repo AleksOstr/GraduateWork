@@ -52,7 +52,7 @@ public class VehicleCategoryServiceImpl implements VehicleCategoryService {
      * @param category - категория ТС
      */
     @Override
-    public VehicleCategory updateCategory(VehicleCategory category) {
+    public VehicleCategory update(VehicleCategory category) {
         return categoryRepository.save(category);
     }
 }
