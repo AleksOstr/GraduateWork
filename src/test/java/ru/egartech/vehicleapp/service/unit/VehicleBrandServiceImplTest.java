@@ -31,13 +31,11 @@ public class VehicleBrandServiceImplTest {
         forSave.setVehicles(new ArrayList<>());
         forSave.setModels(new ArrayList<>());
 
-        VehicleBrand brand = Mockito.mock(VehicleBrand.class);
-
-        Mockito.when(brandRepository.save(Mockito.any(VehicleBrand.class))).thenReturn(brand);
+        Mockito.when(brandRepository.save(Mockito.any(VehicleBrand.class))).thenReturn(forSave);
         VehicleBrand actual = brandService.create(brandName);
 
         Assertions.assertNotNull(actual);
-        Assertions.assertEquals(brand, actual);
+        Assertions.assertEquals(forSave, actual);
         Mockito.verify(brandRepository).save(forSave);
     }
 
