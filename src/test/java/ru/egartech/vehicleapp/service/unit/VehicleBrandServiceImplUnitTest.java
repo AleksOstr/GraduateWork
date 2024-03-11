@@ -10,6 +10,7 @@ import ru.egartech.vehicleapp.model.VehicleBrand;
 import ru.egartech.vehicleapp.repository.VehicleBrandRepository;
 import ru.egartech.vehicleapp.service.VehicleBrandServiceImpl;
 
+import java.util.ArrayList;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -36,6 +37,7 @@ public class VehicleBrandServiceImplUnitTest {
         assertNotNull(found);
         assertTrue(found.isPresent());
         assertEquals(brandName, found.get().getName());
+        Mockito.verify(repository, Mockito.times(1)).findByNameIgnoreCase(brandName);
     }
 
     @Test
@@ -46,9 +48,9 @@ public class VehicleBrandServiceImplUnitTest {
         Mockito.when(repository.save(any(VehicleBrand.class))).thenReturn(brand);
 
         VehicleBrand saved = service.create(brandName);
+        Mockito.verify(repository, Mockito.times(1)).save(brand);
 
         assertNotNull(saved);
-        assertEquals(brand.getId(), saved.getId());
         assertEquals(brand.getName(), saved.getName());
     }
 
@@ -56,11 +58,12 @@ public class VehicleBrandServiceImplUnitTest {
     void shouldReturnUpdatedBrand() {
         String brandName = "brand";
         VehicleBrand brand = setupOptionalBrand(brandName).get();
+        brand.setId(UUID.randomUUID());
 
         Mockito.when(repository.save(any(VehicleBrand.class))).thenReturn(brand);
 
         VehicleBrand updated = service.update(brand);
-
+        Mockito.verify(repository, Mockito.times(1)).save(brand);
         assertNotNull(updated);
         assertEquals(brand.getId(), updated.getId());
         assertEquals(brand.getName(), updated.getName());
@@ -68,8 +71,9 @@ public class VehicleBrandServiceImplUnitTest {
 
     private Optional<VehicleBrand> setupOptionalBrand(String brandName) {
         VehicleBrand brand = new VehicleBrand();
-        brand.setId(UUID.randomUUID());
         brand.setName(brandName);
+        brand.setModels(new ArrayList<>());
+        brand.setVehicles(new ArrayList<>());
         return Optional.of(brand);
     }
 }
