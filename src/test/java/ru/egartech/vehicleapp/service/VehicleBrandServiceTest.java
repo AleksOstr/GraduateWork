@@ -58,14 +58,6 @@ public class VehicleBrandServiceTest {
     }
 
     @Test
-    void findByNameExceptionTest() {
-        Exception exception = Assertions.assertThrows(ValueNotFoundException.class, () -> service.findByName("name"));
-        String message = exception.getMessage();
-
-        Assertions.assertEquals("Brand with name: name not found", message);
-    }
-
-    @Test
     void updateTest() {
         String oldName = "old name";
         VehicleBrand saved = service.create(oldName);

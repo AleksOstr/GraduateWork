@@ -45,7 +45,7 @@ public class VehicleBrandServiceImpl implements VehicleBrandService {
      * @return VehicleBrand - сущность марки ТС
      */
     @Override
-    public Optional<VehicleBrand> findByName(String brandName) throws ValueNotFoundException{
+    public Optional<VehicleBrand> findByName(String brandName) {
         return brandRepository.findByNameIgnoreCase(brandName);
     }
 
