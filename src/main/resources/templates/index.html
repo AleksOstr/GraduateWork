@@ -30,7 +30,7 @@
         <td th:text="${response.getType()}"></td>
         <td th:text="${response.getProdYear()}"></td>
         <td th:text="${response.getRegNumber()}"></td>
-        <td th:text="${response.getHasTrailer()}"></td>
+        <td th:text="${response.isHasTrailer() ? 'да' : 'нет'}"></td>
         <td>
             <form th:method="GET" th:action="@{/vehicle/update/{regNumber}(regNumber=${response.getRegNumber()})}" >
                 <input type="submit" value="Редактировать">

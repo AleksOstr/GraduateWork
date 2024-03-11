@@ -29,7 +29,7 @@
         <td th:text="${vehicle.getType()}"></td>
         <td th:text="${vehicle.getProdYear()}"></td>
         <td th:text="${vehicle.getRegNumber()}"></td>
-        <td th:text="${vehicle.getHasTrailer()}"></td>
+        <td th:text="${vehicle.isHasTrailer() ? 'да' : 'нет'}"></td>
         <td>
     </tr>
     </tbody>
