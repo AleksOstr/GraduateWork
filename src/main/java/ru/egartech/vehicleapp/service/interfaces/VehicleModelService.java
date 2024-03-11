@@ -2,6 +2,8 @@ package ru.egartech.vehicleapp.service.interfaces;
 
 import ru.egartech.vehicleapp.model.VehicleModel;
 
+import java.util.Optional;
+
 /**
  * Сервис моделей ТС
  */
@@ -20,7 +22,7 @@ public interface VehicleModelService {
      * @param modelName - имя модепли ТС
      * @return - VehicleModel сущность модели ТС
      */
-    VehicleModel findByName(String modelName);
+    Optional<VehicleModel> findByName(String modelName);
 
     /**
      * Обновление модели ТС

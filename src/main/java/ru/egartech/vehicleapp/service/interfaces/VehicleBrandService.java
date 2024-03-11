@@ -2,6 +2,8 @@ package ru.egartech.vehicleapp.service.interfaces;
 
 import ru.egartech.vehicleapp.model.VehicleBrand;
 
+import java.util.Optional;
+
 /**
  * Сервис марок ТС
  */
@@ -18,7 +20,7 @@ public interface VehicleBrandService {
      * @param brandName - имя марки ТС
      * @return VehicleBrand - сущность марки ТС
      */
-    VehicleBrand findByName(String brandName);
+    Optional<VehicleBrand> findByName(String brandName);
 
     /**
      * Обновление марки в репозитории

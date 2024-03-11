@@ -2,6 +2,8 @@ package ru.egartech.vehicleapp.service.interfaces;
 
 import ru.egartech.vehicleapp.model.VehicleCategory;
 
+import java.util.Optional;
+
 /**
  * Сервис категорий ТС
  */
@@ -19,7 +21,7 @@ public interface VehicleCategoryService {
      * @param categoryName - имя катеогрии ТС
      * @return VehicleCategory - сущность категории ТС
      */
-    VehicleCategory findByName(String categoryName);
+    Optional<VehicleCategory> findByName(String categoryName);
 
     /**
      * Обновление категории ТС в репозитории
