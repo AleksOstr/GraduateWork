@@ -64,18 +64,4 @@ public class VehicleController {
         service.update(request, regNumber);
         return "redirect:/vehicle";
     }
-
-    @ExceptionHandler(ExistingValueException.class)
-    public String handleException(ExistingValueException e, Model model) {
-        model.addAttribute("message", e.getMessage());
-        return "error";
-    }
-
-    @ExceptionHandler(MethodArgumentNotValidException.class)
-    public String handleException(MethodArgumentNotValidException e, Model model) {
-        String message = "Допускаются только государственные номера РФ (кириллица, " +
-                "заглавные символы АВЕКМНОРСТУХ)";
-        model.addAttribute("message", message);
-        return "error";
-    }
 }
