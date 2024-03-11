@@ -3,11 +3,10 @@ package ru.egartech.vehicleapp.service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import ru.egartech.vehicleapp.api.request.SearchRequest;
 import ru.egartech.vehicleapp.api.request.VehicleRequest;
 import ru.egartech.vehicleapp.exceptions.ExistingValueException;
-import ru.egartech.vehicleapp.exceptions.NullValueException;
-import ru.egartech.vehicleapp.exceptions.ValueNotFoundException;
 import ru.egartech.vehicleapp.model.*;
 import ru.egartech.vehicleapp.repository.VehicleRepository;
 import ru.egartech.vehicleapp.service.interfaces.*;
@@ -16,6 +15,7 @@ import ru.egartech.vehicleapp.service.response.VehicleTypeResponse;
 import ru.egartech.vehicleapp.specification.VehicleSpecification;
 
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Сервис ТС
@@ -32,10 +32,12 @@ public class VehicleServiceImpl implements VehicleService {
 
     /**
      * Создание нового ТС
+     *
      * @param request - запрос с параметрами создаваемого ТС
      * @return - VehicleResponse - response-объект с параметрами созданного ТС
      */
     @Override
+    @Transactional
     public VehicleResponse create(VehicleRequest request) throws ExistingValueException {
         checkRegNumber(request.getRegNumber());
 
@@ -54,11 +56,13 @@ public class VehicleServiceImpl implements VehicleService {
 
     /**
      * Обновление параметров ТС
-     * @param request - запрос с обновляемыми параметрами
+     *
+     * @param request   - запрос с обновляемыми параметрами
      * @param regNumber - гос. номер обновляемого ТС
      * @return - VehicleResponse - response-объект с параметрами созданного ТС
      */
     @Override
+    @Transactional
     public VehicleResponse update(VehicleRequest request, String regNumber) {
         Vehicle vehicle = vehicleRepository.findByRegNumberIgnoreCase(regNumber).orElseThrow();
         if (!request.getRegNumber().equalsIgnoreCase(vehicle.getRegNumber())) {
@@ -72,25 +76,25 @@ public class VehicleServiceImpl implements VehicleService {
         if (!vehicle.getBrand().getName().equalsIgnoreCase(request.getBrand())) {
             VehicleBrand oldBrand = vehicle.getBrand();
             oldBrand.getVehicles().remove(vehicle);
-            brandService.updateBrand(oldBrand);
+            brandService.update(oldBrand);
             setBrand(request.getBrand(), vehicle);
         }
         if (!vehicle.getModel().getName().equalsIgnoreCase(request.getModel())) {
             VehicleModel oldModel = vehicle.getModel();
             oldModel.getVehicles().remove(vehicle);
-            modelService.updateModel(oldModel);
+            modelService.update(oldModel);
             setModel(request.getModel(), request.getBrand(), vehicle);
         }
         if (!vehicle.getType().getName().equalsIgnoreCase(request.getType())) {
             VehicleType oldType = vehicle.getType();
             oldType.getVehicles().remove(vehicle);
-            typeService.updateType(oldType);
+            typeService.update(oldType);
             setType(request.getType(), vehicle);
         }
         if (!vehicle.getCategory().getName().equals(request.getCategory())) {
             VehicleCategory oldCategory = vehicle.getCategory();
             oldCategory.getVehicles().remove(vehicle);
-            categoryService.updateCategory(oldCategory);
+            categoryService.update(oldCategory);
             setCategory(request.getCategory(), vehicle);
         }
         vehicle = vehicleRepository.save(vehicle);
@@ -99,6 +103,7 @@ public class VehicleServiceImpl implements VehicleService {
 
     /**
      * Получение всех ТС из БД
+     *
      * @return List - список response-объектов с параметрами ТС
      */
     @Override
@@ -108,6 +113,7 @@ public class VehicleServiceImpl implements VehicleService {
 
     /**
      * Получение ТС из БД по запросу с параметрами поиска
+     *
      * @param request - запрос с параметрами поиска
      * @return List - список response-объектов с параметрами ТС
      */
@@ -122,6 +128,7 @@ public class VehicleServiceImpl implements VehicleService {
 
     /**
      * Получение ТС из БД по гос. номеру
+     *
      * @param regNumber - запрос с параметрами поиска
      * @return List - список response-объектов с параметрами ТС
      */
@@ -133,6 +140,7 @@ public class VehicleServiceImpl implements VehicleService {
 
     /**
      * Получение списка типов ТС
+     *
      * @return - список типов ТС
      */
     @Override
@@ -142,6 +150,7 @@ public class VehicleServiceImpl implements VehicleService {
 
     /**
      * Маппер Vehicle в VehicleResponse
+     *
      * @param vehicle сущость ТС
      * @return response-объект с параметрами ТС
      */
@@ -154,12 +163,13 @@ public class VehicleServiceImpl implements VehicleService {
         response.setType(vehicle.getType().getName());
         response.setProdYear(vehicle.getProdYear());
         response.setRegNumber(vehicle.getRegNumber());
-        response.setHasTrailer(vehicle.isHasTrailer() ? "да" : "нет");
+        response.setHasTrailer(vehicle.isHasTrailer());
         return response;
     }
 
     /**
      * Проверка гос. номера ТС на наличие в БД
+     *
      * @param regNumber гос. номер ТС
      */
     private void checkRegNumber(String regNumber) {
@@ -171,74 +181,82 @@ public class VehicleServiceImpl implements VehicleService {
 
     /**
      * Установка марки ТС
+     *
      * @param brandName имя ямарки ТС
-     * @param vehicle сущность ТС
+     * @param vehicle   сущность ТС
      */
     private void setBrand(String brandName, Vehicle vehicle) {
-        try {
-            VehicleBrand brand = brandService.findByName(brandName);
+        Optional<VehicleBrand> optionalBrand = brandService.findByName(brandName);
+        if (optionalBrand.isPresent()) {
+            VehicleBrand brand = optionalBrand.get();
             vehicle.setBrand(brand);
             brand.getVehicles().add(vehicle);
-        } catch (ValueNotFoundException e) {
+        } else {
             VehicleBrand brand = brandService.create(brandName);
             vehicle.setBrand(brand);
             brand.getVehicles().add(vehicle);
-            brandService.updateBrand(brand);
+            brandService.update(brand);
         }
     }
 
     /**
      * Установка модели ТС
+     *
      * @param modelName имя модели ТС
      * @param brandName имя марки ТС
-     * @param vehicle сущность ТС
+     * @param vehicle   сущность ТС
      */
     private void setModel(String modelName, String brandName, Vehicle vehicle) {
-        try {
-            VehicleModel model = modelService.findByName(modelName);
+        Optional<VehicleModel> optionalModel = modelService.findByName(modelName);
+        if (optionalModel.isPresent()) {
+            VehicleModel model = optionalModel.get();
             vehicle.setModel(model);
             model.getVehicles().add(vehicle);
-        } catch (ValueNotFoundException e) {
+        } else {
             VehicleModel model = modelService.create(brandName, modelName);
             vehicle.setModel(model);
             model.getVehicles().add(vehicle);
-            modelService.updateModel(model);
+            modelService.update(model);
         }
     }
 
     /**
      * Установка типа ТС
+     *
      * @param typeName тип ТС
-     * @param vehicle сущность ТС
+     * @param vehicle  сущность ТС
      */
     private void setType(String typeName, Vehicle vehicle) {
-        try {
-            VehicleType type = typeService.findByName(typeName);
+        Optional<VehicleType> optionalType = typeService.findByName(typeName);
+        if (optionalType.isPresent()) {
+            VehicleType type = optionalType.get();
             vehicle.setType(type);
             type.getVehicles().add(vehicle);
-        } catch (ValueNotFoundException e) {
+        } else {
             VehicleType type = typeService.create(typeName);
             vehicle.setType(type);
             type.getVehicles().add(vehicle);
-            typeService.updateType(type);
+            typeService.update(type);
         }
     }
 
     /**
      * Установка категории ТС
+     *
      * @param categoryName категория ТС
-     * @param vehicle сущность ТС
+     * @param vehicle      сущность ТС
      */
     private void setCategory(String categoryName, Vehicle vehicle) {
-        try {
-            VehicleCategory category = categoryService.findByName(categoryName);
+        Optional<VehicleCategory> optionalCategory = categoryService.findByName(categoryName);
+        if (optionalCategory.isPresent()) {
+            VehicleCategory category = optionalCategory.get();
             vehicle.setCategory(category);
             category.getVehicles().add(vehicle);
-        } catch (ValueNotFoundException e) {
+        } else {
             VehicleCategory category = categoryService.create(categoryName);
             vehicle.setCategory(category);
             category.getVehicles().add(vehicle);
-            categoryService.updateCategory(category);
+            categoryService.update(category);
         }
     }
 
