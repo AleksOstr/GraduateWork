@@ -11,6 +11,7 @@ import ru.egartech.vehicleapp.service.response.VehicleTypeResponse;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Сервис типов ТС
@@ -40,13 +41,13 @@ public class VehicleTypeServiceImpl implements VehicleTypeService {
 
     /**
      * Пооиск типа ТС по имени
+     *
      * @param typeName - имя типа ТС
      * @return - VehicleType - сущность типа ТС
      */
     @Override
-    public VehicleType findByName(String typeName) throws ValueNotFoundException {
-        return typeRepository.findByNameIgnoreCase(typeName)
-                .orElseThrow(() -> new ValueNotFoundException("Type with name: " + typeName + " not found"));
+    public Optional<VehicleType> findByName(String typeName) throws ValueNotFoundException {
+        return typeRepository.findByNameIgnoreCase(typeName);
     }
 
     /**

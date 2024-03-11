@@ -9,6 +9,7 @@ import ru.egartech.vehicleapp.repository.VehicleBrandRepository;
 import ru.egartech.vehicleapp.service.interfaces.VehicleBrandService;
 
 import java.util.ArrayList;
+import java.util.Optional;
 
 /**
  * Сервис марок ТС
@@ -39,13 +40,13 @@ public class VehicleBrandServiceImpl implements VehicleBrandService {
 
     /**
      * Поиск марки по имени
+     *
      * @param brandName - имя марки ТС
      * @return VehicleBrand - сущность марки ТС
      */
     @Override
-    public VehicleBrand findByName(String brandName) throws ValueNotFoundException{
-        return brandRepository.findByNameIgnoreCase(brandName)
-                .orElseThrow(() -> new ValueNotFoundException("Brand with name: " + brandName + " not found"));
+    public Optional<VehicleBrand> findByName(String brandName) throws ValueNotFoundException{
+        return brandRepository.findByNameIgnoreCase(brandName);
     }
 
     /**

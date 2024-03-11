@@ -11,6 +11,7 @@ import ru.egartech.vehicleapp.service.interfaces.VehicleBrandService;
 import ru.egartech.vehicleapp.service.interfaces.VehicleModelService;
 
 import java.util.ArrayList;
+import java.util.Optional;
 
 /**
  * Сервис моделей ТС
@@ -49,9 +50,8 @@ public class VehicleModelServiceImpl implements VehicleModelService {
      * @return - VehicleModel сущность модели ТС
      */
     @Override
-    public VehicleModel findByName(String modelName) throws ValueNotFoundException {
-        return modelRepository.findByNameIgnoreCase(modelName)
-                .orElseThrow(() -> new ValueNotFoundException("Model with name: " + modelName + " not found"));
+    public Optional<VehicleModel> findByName(String modelName) throws ValueNotFoundException {
+        return modelRepository.findByNameIgnoreCase(modelName);
     }
 
     /**
@@ -70,6 +70,6 @@ public class VehicleModelServiceImpl implements VehicleModelService {
      * @throws ValueNotFoundException если марка ТС не найдена
      */
     private VehicleBrand getBrand(String brandName) throws ValueNotFoundException {
-        return brandService.findByName(brandName);
+        return brandService.findByName(brandName).orElseThrow();
     }
 }

@@ -9,6 +9,7 @@ import ru.egartech.vehicleapp.repository.VehicleCategoryRepository;
 import ru.egartech.vehicleapp.service.interfaces.VehicleCategoryService;
 
 import java.util.ArrayList;
+import java.util.Optional;
 
 /**
  * Сервис категорий ТС
@@ -42,9 +43,8 @@ public class VehicleCategoryServiceImpl implements VehicleCategoryService {
      * @return VehicleCategory - сущность категории ТС
      */
     @Override
-    public VehicleCategory findByName(String categoryName) throws ValueNotFoundException {
-        return categoryRepository.findByNameIgnoreCase(categoryName)
-                .orElseThrow(() -> new ValueNotFoundException("Category with name: " + categoryName + " not found"));
+    public Optional<VehicleCategory> findByName(String categoryName) throws ValueNotFoundException {
+        return categoryRepository.findByNameIgnoreCase(categoryName);
     }
 
     /**
