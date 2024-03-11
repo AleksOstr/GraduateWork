@@ -21,11 +21,11 @@ public class VehicleBrand {
     @Column(name = "name", nullable = false)
     private String name;
 
-    @OneToMany(cascade = CascadeType.REMOVE, fetch = FetchType.EAGER,
+    @OneToMany(cascade = CascadeType.REMOVE, fetch = FetchType.LAZY,
     mappedBy = "brand")
     private List<Vehicle> vehicles;
 
-    @OneToMany(cascade = CascadeType.REMOVE, fetch = FetchType.EAGER,
+    @OneToMany(cascade = CascadeType.REMOVE, fetch = FetchType.LAZY,
             mappedBy = "brand")
     private List<VehicleModel> models;
 }
