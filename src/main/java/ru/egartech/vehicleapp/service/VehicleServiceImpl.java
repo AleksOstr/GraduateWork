@@ -37,7 +37,7 @@ public class VehicleServiceImpl implements VehicleService {
      * @return - VehicleResponse - response-объект с параметрами созданного ТС
      */
     @Override
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public VehicleResponse create(VehicleRequest request) throws ExistingValueException {
         checkRegNumber(request.getRegNumber());
 
@@ -62,7 +62,7 @@ public class VehicleServiceImpl implements VehicleService {
      * @return - VehicleResponse - response-объект с параметрами созданного ТС
      */
     @Override
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public VehicleResponse update(VehicleRequest request, String regNumber) {
         Vehicle vehicle = vehicleRepository.findByRegNumberIgnoreCase(regNumber).orElseThrow();
         if (!request.getRegNumber().equalsIgnoreCase(vehicle.getRegNumber())) {
@@ -107,6 +107,7 @@ public class VehicleServiceImpl implements VehicleService {
      * @return List - список response-объектов с параметрами ТС
      */
     @Override
+    @Transactional(readOnly = true)
     public List<VehicleResponse> findAll() {
         return vehicleRepository.findAll().stream().map(this::mapToResponse).toList();
     }
@@ -118,6 +119,7 @@ public class VehicleServiceImpl implements VehicleService {
      * @return List - список response-объектов с параметрами ТС
      */
     @Override
+    @Transactional(readOnly = true)
     public List<VehicleResponse> findAllByRequest(SearchRequest request) {
         final Specification<Vehicle> specification = new VehicleSpecification(request);
         return vehicleRepository.findAll(specification)
@@ -133,6 +135,7 @@ public class VehicleServiceImpl implements VehicleService {
      * @return List - список response-объектов с параметрами ТС
      */
     @Override
+    @Transactional(readOnly = true)
     public VehicleResponse findByRegNumber(String regNumber) {
         Vehicle vehicle = vehicleRepository.findByRegNumberIgnoreCase(regNumber).orElseThrow();
         return mapToResponse(vehicle);

@@ -1,4 +1,4 @@
-package ru.egartech.vehicleapp.service;
+package ru.egartech.vehicleapp.service.integration;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

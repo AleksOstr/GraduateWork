@@ -2,6 +2,7 @@ package ru.egartech.vehicleapp.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import ru.egartech.vehicleapp.exceptions.ExistingValueException;
 import ru.egartech.vehicleapp.exceptions.ValueNotFoundException;
 import ru.egartech.vehicleapp.model.VehicleBrand;
@@ -30,6 +31,7 @@ public class VehicleModelServiceImpl implements VehicleModelService {
      * @return - VehicleModel сущность модели ТС
      */
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public VehicleModel create(String brandName, String modelName) throws ExistingValueException {
         if (modelRepository.findByNameIgnoreCase(modelName).isPresent()) {
             throw new ExistingValueException("Model with name: " + modelName +
@@ -50,7 +52,8 @@ public class VehicleModelServiceImpl implements VehicleModelService {
      * @return - VehicleModel сущность модели ТС
      */
     @Override
-    public Optional<VehicleModel> findByName(String modelName) throws ValueNotFoundException {
+    @Transactional(readOnly = true)
+    public Optional<VehicleModel> findByName(String modelName) {
         return modelRepository.findByNameIgnoreCase(modelName);
     }
 

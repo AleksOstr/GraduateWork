@@ -1,4 +1,4 @@
-package ru.egartech.vehicleapp.service;
+package ru.egartech.vehicleapp.service.integration;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -7,7 +7,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import ru.egartech.vehicleapp.exceptions.ExistingValueException;
-import ru.egartech.vehicleapp.exceptions.ValueNotFoundException;
 import ru.egartech.vehicleapp.model.VehicleType;
 import ru.egartech.vehicleapp.repository.VehicleTypeRepository;
 import ru.egartech.vehicleapp.service.interfaces.VehicleTypeService;
@@ -55,14 +54,6 @@ public class VehicleTypeServiceTest {
 
         Assertions.assertEquals(type.getId(), found.getId());
         Assertions.assertEquals(type.getName(), found.getName());
-    }
-
-    @Test
-    void findByNameExceptionTest() {
-        Exception exception = Assertions.assertThrows(ValueNotFoundException.class, () -> service.findByName("name"));
-        String message = exception.getMessage();
-
-        Assertions.assertEquals("Type with name: name not found", message);
     }
 
     @Test

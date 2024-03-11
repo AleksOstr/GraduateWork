@@ -3,7 +3,6 @@ package ru.egartech.vehicleapp.service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import ru.egartech.vehicleapp.exceptions.ExistingValueException;
-import ru.egartech.vehicleapp.exceptions.ValueNotFoundException;
 import ru.egartech.vehicleapp.model.VehicleCategory;
 import ru.egartech.vehicleapp.repository.VehicleCategoryRepository;
 import ru.egartech.vehicleapp.service.interfaces.VehicleCategoryService;
@@ -43,7 +42,7 @@ public class VehicleCategoryServiceImpl implements VehicleCategoryService {
      * @return VehicleCategory - сущность категории ТС
      */
     @Override
-    public Optional<VehicleCategory> findByName(String categoryName) throws ValueNotFoundException {
+    public Optional<VehicleCategory> findByName(String categoryName) {
         return categoryRepository.findByNameIgnoreCase(categoryName);
     }
 
