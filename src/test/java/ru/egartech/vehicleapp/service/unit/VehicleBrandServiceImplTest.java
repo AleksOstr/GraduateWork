@@ -26,17 +26,17 @@ public class VehicleBrandServiceImplTest {
 
     @Test
     void create_shouldCallRepository() {
-        VehicleBrand forSave = new VehicleBrand();
-        forSave.setName(brandName);
-        forSave.setVehicles(new ArrayList<>());
-        forSave.setModels(new ArrayList<>());
+        VehicleBrand brandForSave = new VehicleBrand();
+        brandForSave.setName(brandName);
+        brandForSave.setVehicles(new ArrayList<>());
+        brandForSave.setModels(new ArrayList<>());
 
-        Mockito.when(brandRepository.save(Mockito.any(VehicleBrand.class))).thenReturn(forSave);
+        Mockito.when(brandRepository.save(Mockito.any(VehicleBrand.class))).thenReturn(brandForSave);
         VehicleBrand actual = brandService.create(brandName);
 
         Assertions.assertNotNull(actual);
-        Assertions.assertEquals(forSave, actual);
-        Mockito.verify(brandRepository).save(forSave);
+        Assertions.assertEquals(brandForSave, actual);
+        Mockito.verify(brandRepository).save(brandForSave);
     }
 
     @Test
@@ -54,18 +54,18 @@ public class VehicleBrandServiceImplTest {
 
     @Test
     void update_shouldCallRepository() {
-        VehicleBrand forUpdate = new VehicleBrand();
-        forUpdate.setId(UUID.randomUUID());
-        forUpdate.setName(brandName);
-        forUpdate.setVehicles(new ArrayList<>());
-        forUpdate.setModels(new ArrayList<>());
+        VehicleBrand brandForUpdate = new VehicleBrand();
+        brandForUpdate.setId(UUID.randomUUID());
+        brandForUpdate.setName(brandName);
+        brandForUpdate.setVehicles(new ArrayList<>());
+        brandForUpdate.setModels(new ArrayList<>());
 
-        Mockito.when(brandRepository.save(Mockito.any(VehicleBrand.class))).thenReturn(forUpdate);
+        Mockito.when(brandRepository.save(Mockito.any(VehicleBrand.class))).thenReturn(brandForUpdate);
 
-        VehicleBrand actual = brandService.update(forUpdate);
+        VehicleBrand actual = brandService.update(brandForUpdate);
 
         Assertions.assertNotNull(actual);
-        Assertions.assertEquals(forUpdate, actual);
-        Mockito.verify(brandRepository).save(forUpdate);
+        Assertions.assertEquals(brandForUpdate, actual);
+        Mockito.verify(brandRepository).save(brandForUpdate);
     }
 }
