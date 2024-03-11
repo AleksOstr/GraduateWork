@@ -60,7 +60,7 @@ public class VehicleModelServiceTest {
         brandService.create(brandName);
         VehicleModel model = modelService.create(brandName, modelName);
 
-        VehicleModel found = modelService.findByName(modelName);
+        VehicleModel found = modelService.findByName(modelName).orElseThrow();
 
         Assertions.assertEquals(model.getId(), found.getId());
         Assertions.assertEquals(model.getBrand().getName(), found.getBrand().getName());
@@ -83,7 +83,7 @@ public class VehicleModelServiceTest {
         VehicleModel model = modelService.create(brandName, modelOldName);
 
         model.setName("new name");
-        VehicleModel updated = modelService.updateModel(model);
+        VehicleModel updated = modelService.update(model);
 
         Assertions.assertEquals(model.getId(), updated.getId());
         Assertions.assertEquals(model.getName(), updated.getName());

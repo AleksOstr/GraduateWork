@@ -51,7 +51,7 @@ public class VehicleBrandServiceTest {
         brand.setName(brandName);
         VehicleBrand saved = repository.save(brand);
 
-        VehicleBrand found = service.findByName(brandName);
+        VehicleBrand found = service.findByName(brandName).orElseThrow();
 
         Assertions.assertEquals(saved.getId(), found.getId());
         Assertions.assertEquals(saved.getName(), found.getName());
@@ -70,7 +70,7 @@ public class VehicleBrandServiceTest {
         String oldName = "old name";
         VehicleBrand saved = service.create(oldName);
         saved.setName("new name");
-        VehicleBrand updated = service.updateBrand(saved);
+        VehicleBrand updated = service.update(saved);
 
         Assertions.assertEquals(saved.getId(), updated.getId());
         Assertions.assertEquals(saved.getName(), updated.getName());

@@ -11,6 +11,8 @@ import ru.egartech.vehicleapp.repository.*;
 import ru.egartech.vehicleapp.service.interfaces.VehicleService;
 import ru.egartech.vehicleapp.service.response.VehicleResponse;
 
+import java.util.List;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -50,11 +52,11 @@ public class VehicleServiceTest {
         assertEquals(request.getType(), response.getType());
         assertEquals(request.getRegNumber(), response.getRegNumber());
         assertEquals(request.getProdYear(), String.valueOf(response.getProdYear()));
-        assertEquals(request.getHasTrailer(), response.getHasTrailer());
+        assertEquals(request.getHasTrailer(), response.isHasTrailer() ? "да" : "нет");
     }
 
     @Test
-    void createWithExistingRegNumberTest() {
+    void createButRegNumberExistsInDBTest() {
         VehicleRequest request = new VehicleRequest();
         request.setBrand("brand");
         request.setModel("model");
@@ -72,8 +74,86 @@ public class VehicleServiceTest {
         assertEquals("Транспортное средство с гос. номером: А001АА111 уже существует", message);
     }
 
+    @Test
+    void updateTest() {
+        VehicleRequest createRequest = new VehicleRequest();
+        createRequest.setBrand("brand");
+        createRequest.setModel("model");
+        createRequest.setType("type");
+        createRequest.setCategory("category");
+        createRequest.setRegNumber("А001АА111");
+        createRequest.setProdYear("2024");
+        createRequest.setHasTrailer("да");
+        VehicleResponse response = vehicleService.create(createRequest);
+        String oldRegNumber = response.getRegNumber();
+
+        VehicleRequest updateRequest = new VehicleRequest();
+        updateRequest.setBrand("new brand");
+        updateRequest.setModel("new model");
+        updateRequest.setType("new type");
+        updateRequest.setCategory("new category");
+        updateRequest.setRegNumber("А001АА111");
+        updateRequest.setProdYear("2023");
+        updateRequest.setHasTrailer("нет");
+        VehicleResponse updated = vehicleService.update(updateRequest, oldRegNumber);
+
+        assertEquals(response.getId(), updated.getId());
+        assertEquals(updateRequest.getBrand(), updated.getBrand());
+        assertEquals(updateRequest.getModel(), updated.getModel());
+        assertEquals(updateRequest.getCategory(), updated.getCategory());
+        assertEquals(updateRequest.getType(), updated.getType());
+        assertEquals(updateRequest.getRegNumber(), updated.getRegNumber());
+        assertEquals(updateRequest.getProdYear(), String.valueOf(updated.getProdYear()));
+        assertEquals(updateRequest.getHasTrailer(), updated.isHasTrailer() ? "да" : "нет");
+    }
+
+    @Test
+    void updateButRegNumberExistsInDBTest() {
+        VehicleRequest request = new VehicleRequest();
+        request.setBrand("brand");
+        request.setModel("model");
+        request.setType("type");
+        request.setCategory("category");
+        request.setRegNumber("А001АА111");
+        request.setProdYear("2024");
+        request.setHasTrailer("да");
+        vehicleService.create(request);
+
+        request.setRegNumber("А002АА112");
+        vehicleService.create(request);
+
+        VehicleRequest updateRequest = new VehicleRequest();
+        updateRequest.setRegNumber("А002АА112");
+
+        Exception exception = assertThrows(ExistingValueException.class, () -> vehicleService.update(updateRequest,
+                "А001АА111"));
+        String message = exception.getMessage();
+        assertEquals("Транспортное средство с гос. номером: А002АА112 уже существует", message);
+    }
+
+    @Test
+    void findAllTest() {
+        VehicleRequest request = new VehicleRequest();
+        request.setBrand("brand");
+        request.setModel("model");
+        request.setType("type");
+        request.setCategory("category");
+        request.setRegNumber("А001АА111");
+        request.setProdYear("2024");
+        request.setHasTrailer("да");
+        vehicleService.create(request);
+
+        request.setRegNumber("А002АА112");
+        vehicleService.create(request);
+
+        List<VehicleResponse> responses = vehicleService.findAll();
+
+        assertNotNull(responses);
+        assertEquals(2, responses.size());
+    }
+
     @BeforeEach
-    void cleanDB(){
+    void cleanDB() {
         vehicleRepository.deleteAll();
         modelRepository.deleteAll();
         brandRepository.deleteAll();

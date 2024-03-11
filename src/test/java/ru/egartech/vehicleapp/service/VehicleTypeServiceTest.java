@@ -51,7 +51,7 @@ public class VehicleTypeServiceTest {
         String name = "name";
         VehicleType type = service.create(name);
 
-        VehicleType found = service.findByName(name);
+        VehicleType found = service.findByName(name).orElseThrow();
 
         Assertions.assertEquals(type.getId(), found.getId());
         Assertions.assertEquals(type.getName(), found.getName());
@@ -81,7 +81,7 @@ public class VehicleTypeServiceTest {
         String oldName = "old name";
         VehicleType saved = service.create(oldName);
         saved.setName("new name");
-        VehicleType updated = service.updateType(saved);
+        VehicleType updated = service.update(saved);
 
         Assertions.assertEquals(saved.getId(), updated.getId());
         Assertions.assertEquals(saved.getName(), updated.getName());

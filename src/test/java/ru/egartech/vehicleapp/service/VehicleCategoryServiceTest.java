@@ -49,7 +49,7 @@ public class VehicleCategoryServiceTest {
         String categoryName = "name";
         VehicleCategory saved = service.create(categoryName);
 
-        VehicleCategory found = service.findByName(categoryName);
+        VehicleCategory found = service.findByName(categoryName).orElseThrow();
 
         Assertions.assertEquals(saved.getId(), found.getId());
         Assertions.assertEquals(saved.getName(), found.getName());
@@ -68,7 +68,7 @@ public class VehicleCategoryServiceTest {
         String oldName = "old name";
         VehicleCategory saved = service.create(oldName);
         saved.setName("new name");
-        VehicleCategory updated = service.updateCategory(saved);
+        VehicleCategory updated = service.update(saved);
 
         Assertions.assertEquals(saved.getId(), updated.getId());
         Assertions.assertEquals(saved.getName(), updated.getName());
