@@ -6,8 +6,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
-import ru.egartech.vehicleapp.exceptions.ExistingValueException;
-import ru.egartech.vehicleapp.model.Vehicle;
 import ru.egartech.vehicleapp.model.VehicleBrand;
 import ru.egartech.vehicleapp.repository.VehicleBrandRepository;
 import ru.egartech.vehicleapp.service.VehicleBrandServiceImpl;
@@ -19,7 +17,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 
 @ExtendWith(MockitoExtension.class)
-public class VehicleBrandServiceUnitTest {
+public class VehicleBrandServiceImplUnitTest {
 
     @Mock
     private VehicleBrandRepository repository;
