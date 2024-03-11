@@ -38,7 +38,7 @@ public class VehicleController {
     }
 
     @GetMapping("/new")
-    public String creatingPaige(Model model) {
+    public String getCreationPage(Model model) {
         model.addAttribute("request", new VehicleRequest());
         model.addAttribute("types", service.getTypes());
         return "new-vehicle";
@@ -51,7 +51,7 @@ public class VehicleController {
     }
 
     @GetMapping("/update/{regNumber}")
-    public String updatingPaige(@PathVariable String regNumber, Model model) {
+    public String getUpdatePage(@PathVariable String regNumber, Model model) {
         model.addAttribute("request", new VehicleRequest());
         model.addAttribute("vehicle", service.findByRegNumber(regNumber));
         model.addAttribute("oldRegNumber", regNumber);
