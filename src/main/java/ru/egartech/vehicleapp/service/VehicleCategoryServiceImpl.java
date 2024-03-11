@@ -26,10 +26,6 @@ public class VehicleCategoryServiceImpl implements VehicleCategoryService {
      */
     @Override
     public VehicleCategory create(String categoryName) throws ExistingValueException {
-        if (categoryRepository.findByNameIgnoreCase(categoryName).isPresent()) {
-            throw new ExistingValueException("Category with name: " + categoryName +
-                    " already exists");
-        }
         VehicleCategory category = new VehicleCategory();
         category.setName(categoryName);
         category.setVehicles(new ArrayList<>());
