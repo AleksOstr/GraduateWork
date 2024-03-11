@@ -16,5 +16,5 @@ public class VehicleResponse {
     private String category;
     private String regNumber;
     private int prodYear;
-    private String hasTrailer;
+    private boolean hasTrailer;
 }
