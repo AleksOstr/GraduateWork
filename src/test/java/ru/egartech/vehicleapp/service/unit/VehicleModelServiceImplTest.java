@@ -35,20 +35,20 @@ public class VehicleModelServiceImplTest {
     @Test
     void create_shouldCallRepository() {
         VehicleBrand brand = Mockito.mock(VehicleBrand.class);
-        VehicleModel forSave = new VehicleModel();
-        forSave.setName(modelName);
-        forSave.setBrand(brand);
-        forSave.setVehicles(new ArrayList<>());
+        VehicleModel modelForSave = new VehicleModel();
+        modelForSave.setName(modelName);
+        modelForSave.setBrand(brand);
+        modelForSave.setVehicles(new ArrayList<>());
 
         Mockito.when(brandService.findByName(brandName)).thenReturn(Optional.of(brand));
-        Mockito.when(modelRepository.save(Mockito.any(VehicleModel.class))).thenReturn(forSave);
+        Mockito.when(modelRepository.save(Mockito.any(VehicleModel.class))).thenReturn(modelForSave);
 
         VehicleModel actual = modelService.create(brandName, modelName);
 
         Assertions.assertNotNull(actual);
-        Assertions.assertEquals(forSave, actual);
+        Assertions.assertEquals(modelForSave, actual);
         Mockito.verify(brandService).findByName(brandName);
-        Mockito.verify(modelRepository).save(forSave);
+        Mockito.verify(modelRepository).save(modelForSave);
     }
 
     @Test
@@ -67,18 +67,18 @@ public class VehicleModelServiceImplTest {
     @Test
     void update_shouldCallRepository() {
         VehicleBrand brand = Mockito.mock(VehicleBrand.class);
-        VehicleModel forUpdate = new VehicleModel();
-        forUpdate.setId(UUID.randomUUID());
-        forUpdate.setName(modelName);
-        forUpdate.setBrand(brand);
-        forUpdate.setVehicles(new ArrayList<>());
+        VehicleModel modelForUpdate = new VehicleModel();
+        modelForUpdate.setId(UUID.randomUUID());
+        modelForUpdate.setName(modelName);
+        modelForUpdate.setBrand(brand);
+        modelForUpdate.setVehicles(new ArrayList<>());
 
-        Mockito.when(modelRepository.save(Mockito.any(VehicleModel.class))).thenReturn(forUpdate);
+        Mockito.when(modelRepository.save(Mockito.any(VehicleModel.class))).thenReturn(modelForUpdate);
 
-        VehicleModel actual = modelService.update(forUpdate);
+        VehicleModel actual = modelService.update(modelForUpdate);
 
         Assertions.assertNotNull(actual);
-        Assertions.assertEquals(forUpdate, actual);
-        Mockito.verify(modelRepository).save(forUpdate);
+        Assertions.assertEquals(modelForUpdate, actual);
+        Mockito.verify(modelRepository).save(modelForUpdate);
     }
 }
