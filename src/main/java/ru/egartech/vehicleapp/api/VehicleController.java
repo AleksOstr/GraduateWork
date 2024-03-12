@@ -22,7 +22,7 @@ public class VehicleController {
     private final VehicleService service;
 
     @GetMapping
-    public String mainPaige(Model model) {
+    public String getMainPaige(Model model) {
         List<VehicleResponse> responses = service.findAll();
         model.addAttribute("responses", responses);
         model.addAttribute("request", new VehicleRequest());
