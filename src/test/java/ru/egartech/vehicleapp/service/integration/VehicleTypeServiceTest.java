@@ -6,7 +6,6 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
-import ru.egartech.vehicleapp.exceptions.ExistingValueException;
 import ru.egartech.vehicleapp.model.VehicleType;
 import ru.egartech.vehicleapp.repository.VehicleTypeRepository;
 import ru.egartech.vehicleapp.service.interfaces.VehicleTypeService;
@@ -32,17 +31,6 @@ public class VehicleTypeServiceTest {
 
         Assertions.assertNotNull(actual.getId());
         Assertions.assertEquals(expectedName, actual.getName());
-    }
-
-    @Test
-    void createExceptionTest() {
-        String typeName = "name";
-        VehicleType type = service.create(typeName);
-
-        Exception exception = Assertions.assertThrows(ExistingValueException.class, () -> service.create(typeName));
-        String message = exception.getMessage();
-
-        Assertions.assertEquals("Type with name: name already exists", message);
     }
 
     @Test

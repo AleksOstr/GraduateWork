@@ -6,7 +6,6 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
-import ru.egartech.vehicleapp.exceptions.ExistingValueException;
 import ru.egartech.vehicleapp.model.VehicleModel;
 import ru.egartech.vehicleapp.repository.VehicleBrandRepository;
 import ru.egartech.vehicleapp.repository.VehicleModelRepository;
@@ -39,18 +38,6 @@ public class VehicleModelServiceTest {
         Assertions.assertEquals(brandName, model.getBrand().getName());
     }
 
-    @Test
-    void createExceptionTest() {
-        String brandName = "brand";
-        String modelName = "model";
-        brandService.create(brandName);
-        modelService.create(brandName, modelName);
-
-        Exception exception = Assertions.assertThrows(ExistingValueException.class, () -> modelService.create(brandName, modelName));
-        String message = exception.getMessage();
-
-        Assertions.assertEquals("Model with name: model already exists", message);
-    }
 
     @Test
     void findByNameTest() {

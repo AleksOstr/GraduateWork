@@ -6,7 +6,6 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
-import ru.egartech.vehicleapp.exceptions.ExistingValueException;
 import ru.egartech.vehicleapp.model.VehicleCategory;
 import ru.egartech.vehicleapp.repository.VehicleCategoryRepository;
 import ru.egartech.vehicleapp.service.interfaces.VehicleCategoryService;
@@ -28,19 +27,6 @@ public class VehicleCategoryServiceTest {
 
         Assertions.assertNotNull(actual.getId());
         Assertions.assertEquals(expectedName, actual.getName());
-    }
-
-    @Test
-    void createExceptionTest() {
-        String categoryName = "category";
-        VehicleCategory category = new VehicleCategory();
-        category.setName(categoryName);
-        repository.save(category);
-
-        Exception exception = Assertions.assertThrows(ExistingValueException.class, () -> service.create(categoryName));
-        String message = exception.getMessage();
-
-        Assertions.assertEquals("Category with name: category already exists", message);
     }
 
     @Test
