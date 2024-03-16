@@ -33,7 +33,9 @@ public class VehicleModelServiceImpl implements VehicleModelService {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public VehicleModel create(String brandName, String modelName) throws ExistingValueException {
-        VehicleBrand brand = getBrand(brandName);
+        Optional<VehicleBrand> optional = getBrand(brandName);
+        VehicleBrand brand;
+        brand = optional.orElseGet(() -> brandService.create(brandName));
         VehicleModel model = new VehicleModel();
         model.setName(modelName);
         model.setBrand(brand);
@@ -68,7 +70,7 @@ public class VehicleModelServiceImpl implements VehicleModelService {
      * @return марка ТС
      * @throws ValueNotFoundException если марка ТС не найдена
      */
-    private VehicleBrand getBrand(String brandName) throws ValueNotFoundException {
-        return brandService.findByName(brandName).orElseThrow();
+    private Optional<VehicleBrand> getBrand(String brandName) throws ValueNotFoundException {
+        return brandService.findByName(brandName);
     }
 }
