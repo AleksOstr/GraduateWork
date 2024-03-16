@@ -2,6 +2,8 @@ package ru.gb.vehicleapp.api;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -20,17 +22,25 @@ public class VehicleController {
     private final VehicleService service;
 
     @GetMapping
-    public String getMainPaige(Model model) {
-        List<VehicleResponse> responses = service.findAll();
-        model.addAttribute("responses", responses);
+    public String getMainPaige(Model model, @RequestParam(value = "offset", defaultValue = "0") int offset,
+                               @RequestParam(value = "limit", defaultValue = "5") int limit) {
+        Page<VehicleResponse> page = service.findAll(PageRequest.of(offset, limit));
+        model.addAttribute("page", page);
+        model.addAttribute("pageNumber", page.getNumber());
+        model.addAttribute("totalPages", page.getTotalPages());
+        model.addAttribute("limit", limit);
         model.addAttribute("request", new VehicleRequest());
         return "index";
     }
 
     @GetMapping("/filter")
-    public String filter(Model model, SearchRequest request) {
-        List<VehicleResponse> responses = service.findAllByRequest(request);
-        model.addAttribute("responses", responses);
+    public String filter(Model model, SearchRequest request, @RequestParam(value = "offset", defaultValue = "0") int offset,
+                         @RequestParam(value = "limit", defaultValue = "5") int limit) {
+        Page<VehicleResponse> page = service.findAllByRequest(request, PageRequest.of(offset, limit));
+        model.addAttribute("page", page);
+        model.addAttribute("pageNumber", page.getNumber());
+        model.addAttribute("totalPages", page.getTotalPages());
+        model.addAttribute("limit", limit);
         model.addAttribute("request", new VehicleRequest());
         return "index";
     }

@@ -9,8 +9,8 @@
 </head>
 <body>
 <span>Список ТС</span>
-<span th:if="${#lists.isEmpty(responses)}"> Записей не найдено</span>
-<table th:if="${not #lists.isEmpty(responses)}">
+<span th:if="${#lists.isEmpty(page)}"> Записей не найдено</span>
+<table th:if="${not #lists.isEmpty(page)}">
     <thead>
     <tr>
         <th>Марка</th>
@@ -23,22 +23,27 @@
     </tr>
     </thead>
     <tbody>
-    <tr th:each="response : ${responses}">
-        <td th:text="${response.getBrand()}"></td>
-        <td th:text="${response.getModel()}"></td>
-        <td th:text="${response.getCategory()}"></td>
-        <td th:text="${response.getType()}"></td>
-        <td th:text="${response.getProdYear()}"></td>
-        <td th:text="${response.getRegNumber()}"></td>
-        <td th:text="${response.isHasTrailer() ? 'да' : 'нет'}"></td>
+    <tr th:each="item : ${page}">
+        <td th:text="${item.getBrand()}"></td>
+        <td th:text="${item.getModel()}"></td>
+        <td th:text="${item.getCategory()}"></td>
+        <td th:text="${item.getType()}"></td>
+        <td th:text="${item.getProdYear()}"></td>
+        <td th:text="${item.getRegNumber()}"></td>
+        <td th:text="${item.isHasTrailer() ? 'да' : 'нет'}"></td>
         <td>
-            <form th:method="GET" th:action="@{/vehicle/update/{regNumber}(regNumber=${response.getRegNumber()})}" >
+            <form th:method="GET" th:action="@{/vehicle/update/{regNumber}(regNumber=${item.getRegNumber()})}" >
                 <input type="submit" value="Редактировать">
             </form></td>
     </tr>
     </tbody>
 </table>
-
+<div th:if="${pageNumber} > 0">
+    <a th:href="@{'/vehicle?offset=' + ${(pageNumber - 1)} + '&limit=' + ${limit}}"> Предыдущая страница</a>
+</div>
+<div th:if="${pageNumber} < (${totalPages} - 1)">
+    <a th:href="@{'/vehicle?offset=' + ${(pageNumber + 1)} + '&limit=' + ${limit}}"> Следующая страница</a>
+</div>
 <form th:method="GET" th:action="@{/vehicle/new}">
     <input type="submit" value="Добавить запись">
 </form>

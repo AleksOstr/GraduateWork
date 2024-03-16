@@ -1,6 +1,9 @@
 package ru.gb.vehicleapp.service;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.gb.vehicleapp.api.request.SearchRequest;
@@ -108,8 +111,10 @@ public class VehicleServiceImpl implements VehicleService {
      */
     @Override
     @Transactional(readOnly = true)
-    public List<VehicleResponse> findAll() {
-        return vehicleRepository.findAll().stream().map(this::mapToResponse).toList();
+    public Page<VehicleResponse> findAll(Pageable pageable) {
+        Page<Vehicle> page = vehicleRepository.findAll(pageable);
+        List<VehicleResponse> responses = page.stream().map(this::mapToResponse).toList();
+        return new PageImpl<>(responses, page.getPageable(), page.getTotalElements());
     }
 
     /**
@@ -120,14 +125,15 @@ public class VehicleServiceImpl implements VehicleService {
      */
     @Override
     @Transactional(readOnly = true)
-    public List<VehicleResponse> findAllByRequest(SearchRequest request) {
+    public Page<VehicleResponse> findAllByRequest(SearchRequest request, Pageable pageable) {
         String brand = request.getBrand().isEmpty() ? null : request.getBrand();
         String model = request.getModel().isEmpty() ? null : request.getModel();
         String category = request.getCategory().isEmpty() ? null : request.getCategory();
-        String regNumber = request.getRegNumber().isEmpty() ? null  : request.getRegNumber();
+        String regNumber = request.getRegNumber().isEmpty() ? null : request.getRegNumber();
         Integer prodYear = request.getProdYear().isEmpty() ? null : Integer.parseInt(request.getProdYear());
-        List<Vehicle> vehicles = vehicleRepository.findAll(brand, model, category,regNumber,prodYear);
-        return vehicles.stream().map(this::mapToResponse).toList();
+        Page<Vehicle> page = vehicleRepository.findAll(brand, model, category, regNumber, prodYear, pageable);
+        List<VehicleResponse> responses = page.stream().map(this::mapToResponse).toList();
+        return new PageImpl<>(responses, pageable, page.getTotalElements());
     }
 
     /**

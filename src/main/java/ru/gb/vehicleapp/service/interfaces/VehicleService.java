@@ -1,5 +1,7 @@
 package ru.gb.vehicleapp.service.interfaces;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import ru.gb.vehicleapp.api.request.SearchRequest;
 import ru.gb.vehicleapp.api.request.VehicleRequest;
 import ru.gb.vehicleapp.service.response.VehicleResponse;
@@ -31,14 +33,14 @@ public interface VehicleService {
      * Получение всех ТС из БД
      * @return List - список response-объектов с параметрами ТС
      */
-    List<VehicleResponse> findAll();
+    Page<VehicleResponse> findAll(Pageable pageable);
 
     /**
      * Получение ТС из БД по запросу с параметрами поиска
      * @param request - запрос с параметрами поиска
      * @return List - список response-объектов с параметрами ТС
      */
-    List<VehicleResponse> findAllByRequest(SearchRequest request);
+    Page<VehicleResponse> findAllByRequest(SearchRequest request, Pageable pageable);
 
     /**
      * Получение ТС из БД по гос. номеру
