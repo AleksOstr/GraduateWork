@@ -1,18 +1,22 @@
 package ru.gb.vehicleapp.service;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.gb.vehicleapp.api.request.SearchRequest;
 import ru.gb.vehicleapp.api.request.VehicleRequest;
 import ru.gb.vehicleapp.exceptions.ExistingValueException;
-import ru.gb.vehicleapp.model.*;
+import ru.gb.vehicleapp.model.Vehicle;
+import ru.gb.vehicleapp.model.VehicleCategory;
+import ru.gb.vehicleapp.model.VehicleModel;
+import ru.gb.vehicleapp.model.VehicleType;
 import ru.gb.vehicleapp.repository.VehicleRepository;
-import ru.gb.vehicleapp.service.interfaces.*;
+import ru.gb.vehicleapp.service.interfaces.VehicleCategoryService;
+import ru.gb.vehicleapp.service.interfaces.VehicleModelService;
+import ru.gb.vehicleapp.service.interfaces.VehicleService;
+import ru.gb.vehicleapp.service.interfaces.VehicleTypeService;
 import ru.gb.vehicleapp.service.response.VehicleResponse;
 import ru.gb.vehicleapp.service.response.VehicleTypeResponse;
-import ru.gb.vehicleapp.specification.VehicleSpecification;
 
 import java.util.List;
 import java.util.Optional;
@@ -25,7 +29,6 @@ import java.util.Optional;
 public class VehicleServiceImpl implements VehicleService {
 
     private final VehicleRepository vehicleRepository;
-    private final VehicleBrandService brandService;
     private final VehicleModelService modelService;
     private final VehicleTypeService typeService;
     private final VehicleCategoryService categoryService;
@@ -42,8 +45,8 @@ public class VehicleServiceImpl implements VehicleService {
         checkRegNumber(request.getRegNumber());
 
         Vehicle vehicle = new Vehicle();
-        setBrand(request.getBrand(), vehicle);
         setModel(request.getModel(), request.getBrand(), vehicle);
+        vehicle.setBrand(vehicle.getModel().getBrand().getName());
         setType(request.getType(), vehicle);
         setCategory(request.getCategory(), vehicle);
         vehicle.setRegNumber(request.getRegNumber());
@@ -73,17 +76,14 @@ public class VehicleServiceImpl implements VehicleService {
             vehicle.setProdYear(Integer.parseInt(request.getProdYear()));
         }
         vehicle.setHasTrailer(request.getHasTrailer().equals("да"));
-        if (!vehicle.getBrand().getName().equalsIgnoreCase(request.getBrand())) {
-            VehicleBrand oldBrand = vehicle.getBrand();
-            oldBrand.getVehicles().remove(vehicle);
-            brandService.update(oldBrand);
-            setBrand(request.getBrand(), vehicle);
-        }
         if (!vehicle.getModel().getName().equalsIgnoreCase(request.getModel())) {
             VehicleModel oldModel = vehicle.getModel();
             oldModel.getVehicles().remove(vehicle);
             modelService.update(oldModel);
             setModel(request.getModel(), request.getBrand(), vehicle);
+        }
+        if (!vehicle.getBrand().equalsIgnoreCase(vehicle.getModel().getBrand().getName())) {
+            vehicle.setBrand(vehicle.getModel().getBrand().getName());
         }
         if (!vehicle.getType().getName().equalsIgnoreCase(request.getType())) {
             VehicleType oldType = vehicle.getType();
@@ -121,11 +121,13 @@ public class VehicleServiceImpl implements VehicleService {
     @Override
     @Transactional(readOnly = true)
     public List<VehicleResponse> findAllByRequest(SearchRequest request) {
-        final Specification<Vehicle> specification = new VehicleSpecification(request);
-        return vehicleRepository.findAll(specification)
-                .stream()
-                .map(this::mapToResponse)
-                .toList();
+        String brand = request.getBrand().isEmpty() ? null : request.getBrand();
+        String model = request.getModel().isEmpty() ? null : request.getModel();
+        String category = request.getCategory().isEmpty() ? null : request.getCategory();
+        String regNumber = request.getRegNumber().isEmpty() ? null  : request.getRegNumber();
+        Integer prodYear = request.getProdYear().isEmpty() ? null : Integer.parseInt(request.getProdYear());
+        List<Vehicle> vehicles = vehicleRepository.findAll(brand, model, category,regNumber,prodYear);
+        return vehicles.stream().map(this::mapToResponse).toList();
     }
 
     /**
@@ -160,7 +162,7 @@ public class VehicleServiceImpl implements VehicleService {
     private VehicleResponse mapToResponse(Vehicle vehicle) {
         VehicleResponse response = new VehicleResponse();
         response.setId(vehicle.getId());
-        response.setBrand(vehicle.getBrand().getName());
+        response.setBrand(vehicle.getBrand());
         response.setModel(vehicle.getModel().getName());
         response.setCategory(vehicle.getCategory().getName());
         response.setType(vehicle.getType().getName());
@@ -179,26 +181,6 @@ public class VehicleServiceImpl implements VehicleService {
         if (vehicleRepository.findByRegNumberIgnoreCase(regNumber).isPresent()) {
             throw new ExistingValueException("Транспортное средство с гос. номером: " + regNumber +
                     " уже существует");
-        }
-    }
-
-    /**
-     * Установка марки ТС
-     *
-     * @param brandName имя ямарки ТС
-     * @param vehicle   сущность ТС
-     */
-    private void setBrand(String brandName, Vehicle vehicle) {
-        Optional<VehicleBrand> optionalBrand = brandService.findByName(brandName);
-        if (optionalBrand.isPresent()) {
-            VehicleBrand brand = optionalBrand.get();
-            vehicle.setBrand(brand);
-            brand.getVehicles().add(vehicle);
-        } else {
-            VehicleBrand brand = brandService.create(brandName);
-            vehicle.setBrand(brand);
-            brand.getVehicles().add(vehicle);
-            brandService.update(brand);
         }
     }
 
