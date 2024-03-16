@@ -28,7 +28,6 @@ public class VehicleBrandServiceImpl implements VehicleBrandService {
     public VehicleBrand create(String brandName) throws ExistingValueException {
         VehicleBrand brand = new VehicleBrand();
         brand.setName(brandName);
-        brand.setVehicles(new ArrayList<>());
         brand.setModels(new ArrayList<>());
         return brandRepository.save(brand);
     }
