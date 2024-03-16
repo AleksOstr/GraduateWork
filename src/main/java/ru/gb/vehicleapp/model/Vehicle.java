@@ -19,10 +19,6 @@ public class Vehicle {
 
     @ManyToOne
     @JoinColumn
-    private VehicleBrand brand;
-
-    @ManyToOne
-    @JoinColumn
     private VehicleModel model;
 
     @ManyToOne
@@ -32,6 +28,9 @@ public class Vehicle {
     @ManyToOne
     @JoinColumn
     private VehicleCategory category;
+
+    @Column(name = "brand")
+    private String brand;
 
     // Регистрационный номер
     @Column(name = "reg_number")
