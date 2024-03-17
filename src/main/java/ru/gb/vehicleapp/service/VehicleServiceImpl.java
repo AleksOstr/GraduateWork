@@ -159,6 +159,13 @@ public class VehicleServiceImpl implements VehicleService {
         return typeService.findAll();
     }
 
+
+    @Override
+    public void delete(String regNumber) {
+        Vehicle vehicle = vehicleRepository.findByRegNumberIgnoreCase(regNumber).orElseThrow();
+        vehicleRepository.delete(vehicle);
+    }
+
     /**
      * Маппер Vehicle в VehicleResponse
      *

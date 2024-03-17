@@ -72,4 +72,10 @@ public class VehicleController {
         service.update(request, regNumber);
         return "redirect:/vehicle";
     }
+
+    @DeleteMapping("/delete/{regNumber}")
+    public String deleteVehicle(@PathVariable String regNumber) {
+        service.delete(regNumber);
+        return "redirect:/vehicle";
+    }
 }
