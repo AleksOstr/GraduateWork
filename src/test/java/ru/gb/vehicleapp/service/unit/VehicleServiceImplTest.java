@@ -7,10 +7,13 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import ru.gb.vehicleapp.api.request.SearchRequest;
 import ru.gb.vehicleapp.api.request.VehicleRequest;
 import ru.gb.vehicleapp.exceptions.ExistingValueException;
-import ru.egartech.vehicleapp.model.*;
+import ru.gb.vehicleapp.model.*;
 import ru.gb.vehicleapp.repository.VehicleRepository;
 import ru.gb.vehicleapp.service.VehicleServiceImpl;
 import ru.gb.vehicleapp.service.interfaces.VehicleBrandService;
@@ -19,8 +22,6 @@ import ru.gb.vehicleapp.service.interfaces.VehicleModelService;
 import ru.gb.vehicleapp.service.interfaces.VehicleTypeService;
 import ru.gb.vehicleapp.service.response.VehicleResponse;
 import ru.gb.vehicleapp.service.response.VehicleTypeResponse;
-import ru.gb.vehicleapp.specification.VehicleSpecification;
-import ru.gb.vehicleapp.model.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -56,25 +57,29 @@ public class VehicleServiceImplTest {
 
     @Test
     void createWithExistingData_shouldCallServicesAndRepository() {
-        Optional<VehicleBrand> brand = Optional.of(Mockito.mock(VehicleBrand.class));
-        Optional<VehicleModel> model = Optional.of(Mockito.mock(VehicleModel.class));
-        Optional<VehicleType> type = Optional.of(Mockito.mock(VehicleType.class));
-        Optional<VehicleCategory> category = Optional.of(Mockito.mock(VehicleCategory.class));
+        VehicleBrand brandMock = Mockito.mock(VehicleBrand.class);
+        VehicleModel modelMock = Mockito.mock(VehicleModel.class);
+        VehicleType typeMock = Mockito.mock(VehicleType.class);
+        VehicleCategory categoryMock = Mockito.mock(VehicleCategory.class);
+
+        Optional<VehicleModel> model = Optional.of(modelMock);
+        Optional<VehicleType> type = Optional.of(typeMock);
+        Optional<VehicleCategory> category = Optional.of(categoryMock);
 
         VehicleRequest request = setupRequest();
 
-        Vehicle vehicleForSave = setupVehicle(brand.get(), model.get(), type.get(), category.get());
+        Vehicle vehicleForSave = setupVehicle(model.get(), type.get(), category.get());
 
-        Mockito.when(brandService.findByName(brandName)).thenReturn(brand);
         Mockito.when(modelService.findByName(modelName)).thenReturn(model);
         Mockito.when(categoryService.findByName(categoryName)).thenReturn(category);
         Mockito.when(typeService.findByName(typeName)).thenReturn(type);
         Mockito.when(vehicleRepository.findByRegNumberIgnoreCase(regNumber)).thenReturn(Optional.empty());
+        Mockito.when(modelMock.getBrand()).thenReturn(brandMock);
+        Mockito.when(brandMock.getName()).thenReturn(brandName);
         Mockito.when(vehicleRepository.save(Mockito.any(Vehicle.class))).thenReturn(vehicleForSave);
 
         VehicleResponse actual = vehicleService.create(request);
 
-        Mockito.verify(brandService).findByName(brandName);
         Mockito.verify(modelService).findByName(modelName);
         Mockito.verify(categoryService).findByName(categoryName);
         Mockito.verify(typeService).findByName(typeName);
@@ -86,7 +91,6 @@ public class VehicleServiceImplTest {
 
     @Test
     void createWithNewData_shouldCallServicesAndRepository() {
-        Optional<VehicleBrand> brand = Optional.empty();
         Optional<VehicleModel> model = Optional.empty();
         Optional<VehicleType> type = Optional.empty();
         Optional<VehicleCategory> category = Optional.empty();
@@ -97,23 +101,21 @@ public class VehicleServiceImplTest {
         VehicleCategory categoryMock = Mockito.mock(VehicleCategory.class);
 
         VehicleRequest request = setupRequest();
-        Vehicle vehicleForSave = setupVehicle(brandMock, modelMock, typeMock, categoryMock);
+        Vehicle vehicleForSave = setupVehicle(modelMock, typeMock, categoryMock);
 
-        Mockito.when(brandService.findByName(brandName)).thenReturn(brand);
-        Mockito.when(brandService.create(brandName)).thenReturn(brandMock);
         Mockito.when(modelService.findByName(modelName)).thenReturn(model);
         Mockito.when(modelService.create(brandName, modelName)).thenReturn(modelMock);
         Mockito.when(categoryService.findByName(categoryName)).thenReturn(category);
         Mockito.when(categoryService.create(categoryName)).thenReturn(categoryMock);
         Mockito.when(typeService.findByName(typeName)).thenReturn(type);
         Mockito.when(typeService.create(typeName)).thenReturn(typeMock);
+        Mockito.when(modelMock.getBrand()).thenReturn(brandMock);
+        Mockito.when(brandMock.getName()).thenReturn(brandName);
         Mockito.when(vehicleRepository.findByRegNumberIgnoreCase(regNumber)).thenReturn(Optional.empty());
         Mockito.when(vehicleRepository.save(Mockito.any(Vehicle.class))).thenReturn(vehicleForSave);
 
         VehicleResponse actual = vehicleService.create(request);
 
-        Mockito.verify(brandService).findByName(brandName);
-        Mockito.verify(brandService).create(brandName);
         Mockito.verify(modelService).findByName(modelName);
         Mockito.verify(modelService).create(brandName,modelName);
         Mockito.verify(categoryService).findByName(categoryName);
@@ -146,7 +148,7 @@ public class VehicleServiceImplTest {
         VehicleRequest request = setupRequest();
 
         Vehicle vehicleMock = Mockito.mock(Vehicle.class);
-        Mockito.when(vehicleMock.getBrand()).thenReturn(brandOptional.get());
+        Mockito.when(vehicleMock.getBrand()).thenReturn(brandName);
         Mockito.when(vehicleMock.getModel()).thenReturn(modelOptional.get());
         Mockito.when(vehicleMock.getType()).thenReturn(typeOptional.get());
         Mockito.when(vehicleMock.getCategory()).thenReturn(categoryOptional.get());
@@ -154,8 +156,8 @@ public class VehicleServiceImplTest {
 
         VehicleBrand brandMock = brandOptional.get();
         Mockito.when(brandMock.getName()).thenReturn("");
-        Mockito.when(brandMock.getVehicles()).thenReturn(new ArrayList<>(List.of(vehicleMock)));
         VehicleModel modelMock = modelOptional.get();
+        Mockito.when(modelMock.getBrand()).thenReturn(brandMock);
         Mockito.when(modelMock.getName()).thenReturn("");
         Mockito.when(modelMock.getVehicles()).thenReturn(new ArrayList<>(List.of(vehicleMock)));
         VehicleType typeMock = typeOptional.get();
@@ -167,7 +169,6 @@ public class VehicleServiceImplTest {
 
         Mockito.when(vehicleRepository.findByRegNumberIgnoreCase(regNumber)).thenReturn(Optional.of(vehicleMock));
         Mockito.when(vehicleRepository.save(vehicleMock)).thenReturn(vehicleMock);
-        Mockito.when(brandService.findByName(brandName)).thenReturn(brandOptional);
         Mockito.when(modelService.findByName(modelName)).thenReturn(modelOptional);
         Mockito.when(typeService.findByName(typeName)).thenReturn(typeOptional);
         Mockito.when(categoryService.findByName(categoryName)).thenReturn(categoryOptional);
@@ -177,8 +178,6 @@ public class VehicleServiceImplTest {
         Assertions.assertNotNull(actual);
         Mockito.verify(vehicleRepository).findByRegNumberIgnoreCase(regNumber);
         Mockito.verify(vehicleRepository).save(vehicleMock);
-        Mockito.verify(brandService).update(brandMock);
-        Mockito.verify(brandService).findByName(brandName);
         Mockito.verify(modelService).update(modelMock);
         Mockito.verify(modelService).findByName(modelName);
         Mockito.verify(typeService).update(typeMock);
@@ -202,15 +201,15 @@ public class VehicleServiceImplTest {
         VehicleRequest request = setupRequest();
 
         Vehicle vehicleMock = Mockito.mock(Vehicle.class);
-        Mockito.when(vehicleMock.getBrand()).thenReturn(brandMock);
+        Mockito.when(vehicleMock.getBrand()).thenReturn(brandName);
         Mockito.when(vehicleMock.getModel()).thenReturn(modelMock);
         Mockito.when(vehicleMock.getType()).thenReturn(typeMock);
         Mockito.when(vehicleMock.getCategory()).thenReturn(categoryMock);
         Mockito.when(vehicleMock.getRegNumber()).thenReturn(regNumber);
 
         Mockito.when(brandMock.getName()).thenReturn("");
-        Mockito.when(brandMock.getVehicles()).thenReturn(new ArrayList<>(List.of(vehicleMock)));
         Mockito.when(modelMock.getName()).thenReturn("");
+        Mockito.when(modelMock.getBrand()).thenReturn(brandMock);
         Mockito.when(modelMock.getVehicles()).thenReturn(new ArrayList<>(List.of(vehicleMock)));
         Mockito.when(typeMock.getName()).thenReturn("");
         Mockito.when(typeMock.getVehicles()).thenReturn(new ArrayList<>(List.of(vehicleMock)));
@@ -219,8 +218,6 @@ public class VehicleServiceImplTest {
 
         Mockito.when(vehicleRepository.findByRegNumberIgnoreCase(regNumber)).thenReturn(Optional.of(vehicleMock));
         Mockito.when(vehicleRepository.save(vehicleMock)).thenReturn(vehicleMock);
-        Mockito.when(brandService.findByName(brandName)).thenReturn(brandOptional);
-        Mockito.when(brandService.create(brandName)).thenReturn(brandMock);
         Mockito.when(modelService.findByName(modelName)).thenReturn(modelOptional);
         Mockito.when(modelService.create(brandName, modelName)).thenReturn(modelMock);
         Mockito.when(typeService.findByName(typeName)).thenReturn(typeOptional);
@@ -233,9 +230,6 @@ public class VehicleServiceImplTest {
         Assertions.assertNotNull(actual);
         Mockito.verify(vehicleRepository).findByRegNumberIgnoreCase(regNumber);
         Mockito.verify(vehicleRepository).save(vehicleMock);
-        Mockito.verify(brandService, Mockito.times(2)).update(brandMock);
-        Mockito.verify(brandService).findByName(brandName);
-        Mockito.verify(brandService).create(brandName);
         Mockito.verify(modelService, Mockito.times(2)).update(modelMock);
         Mockito.verify(modelService).findByName(modelName);
         Mockito.verify(modelService).create(brandName, modelName);
@@ -259,33 +253,25 @@ public class VehicleServiceImplTest {
 
     @Test
     void findAll_shouldCallRepository() {
-        Vehicle vehicle = Mockito.mock(Vehicle.class);
-        VehicleBrand brand = Mockito.mock(VehicleBrand.class);
-        VehicleModel model = Mockito.mock(VehicleModel.class);
-        VehicleType type = Mockito.mock(VehicleType.class);
-        VehicleCategory category = Mockito.mock(VehicleCategory.class);
-        Mockito.when(vehicle.getBrand()).thenReturn(brand);
-        Mockito.when(vehicle.getModel()).thenReturn(model);
-        Mockito.when(vehicle.getType()).thenReturn(type);
-        Mockito.when(vehicle.getCategory()).thenReturn(category);
+        Pageable pageable = PageRequest.of(0, 5);
+        Page<Vehicle> page = Mockito.mock(Page.class);
 
-        Mockito.when(vehicleRepository.findAll()).thenReturn(List.of(vehicle));
+        Mockito.when(vehicleRepository.findAll(pageable)).thenReturn(page);
+        Mockito.when(page.getPageable()).thenReturn(pageable);
 
-        List<VehicleResponse> actual = vehicleService.findAll();
+        Page<VehicleResponse> actual = vehicleService.findAll(pageable);
 
         Assertions.assertNotNull(actual);
-        Assertions.assertEquals(1, actual.size());
-        Mockito.verify(vehicleRepository).findAll();
+        Mockito.verify(vehicleRepository).findAll(pageable);
     }
 
     @Test
     void findByRegNumber_shouldCallRepository() {
         Vehicle vehicle = Mockito.mock(Vehicle.class);
-        VehicleBrand brand = Mockito.mock(VehicleBrand.class);
         VehicleModel model = Mockito.mock(VehicleModel.class);
         VehicleType type = Mockito.mock(VehicleType.class);
         VehicleCategory category = Mockito.mock(VehicleCategory.class);
-        Mockito.when(vehicle.getBrand()).thenReturn(brand);
+        Mockito.when(vehicle.getBrand()).thenReturn(brandName);
         Mockito.when(vehicle.getModel()).thenReturn(model);
         Mockito.when(vehicle.getType()).thenReturn(type);
         Mockito.when(vehicle.getCategory()).thenReturn(category);
@@ -301,22 +287,23 @@ public class VehicleServiceImplTest {
     @Test
     void findAllByRequest_shouldCallRepository() {
         SearchRequest request = Mockito.mock(SearchRequest.class);
-        Vehicle vehicle = Mockito.mock(Vehicle.class);
-        VehicleBrand brand = Mockito.mock(VehicleBrand.class);
-        VehicleModel model = Mockito.mock(VehicleModel.class);
-        VehicleType type = Mockito.mock(VehicleType.class);
-        VehicleCategory category = Mockito.mock(VehicleCategory.class);
-        Mockito.when(vehicle.getBrand()).thenReturn(brand);
-        Mockito.when(vehicle.getModel()).thenReturn(model);
-        Mockito.when(vehicle.getType()).thenReturn(type);
-        Mockito.when(vehicle.getCategory()).thenReturn(category);
+        Pageable pageable = Mockito.mock(Pageable.class);
+        Page<Vehicle> page = Mockito.mock(Page.class);
 
-        Mockito.when(vehicleRepository.findAll(Mockito.any(VehicleSpecification.class))).thenReturn(List.of(vehicle));
+        Mockito.when(request.getBrand()).thenReturn(brandName);
+        Mockito.when(request.getModel()).thenReturn(modelName);
+        Mockito.when(request.getCategory()).thenReturn(categoryName);
+        Mockito.when(request.getRegNumber()).thenReturn(regNumber);
+        Mockito.when(request.getProdYear()).thenReturn(prodYear);
 
-        List<VehicleResponse> actual = vehicleService.findAllByRequest(request);
+        Mockito.when(vehicleRepository.findAll(brandName, modelName, categoryName, regNumber, Integer.parseInt(prodYear),
+                pageable)).thenReturn(page);
+
+        Page<VehicleResponse> actual = vehicleService.findAllByRequest(request, pageable);
 
         Assertions.assertNotNull(actual);
-        Mockito.verify(vehicleRepository).findAll(Mockito.any(VehicleSpecification.class));
+        Mockito.verify(vehicleRepository).findAll(brandName, modelName, categoryName, regNumber, Integer.parseInt(prodYear),
+                pageable);
     }
 
     @Test
@@ -343,9 +330,9 @@ public class VehicleServiceImplTest {
         return request;
     }
     
-    private Vehicle setupVehicle(VehicleBrand brand, VehicleModel model, VehicleType type, VehicleCategory category) {
+    private Vehicle setupVehicle(VehicleModel model, VehicleType type, VehicleCategory category) {
         Vehicle vehicle = new Vehicle();
-        vehicle.setBrand(brand);
+        vehicle.setBrand(brandName);
         vehicle.setModel(model);
         vehicle.setType(type);
         vehicle.setCategory(category);

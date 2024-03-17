@@ -52,6 +52,27 @@ public class VehicleModelServiceImplTest {
     }
 
     @Test
+    void create_shouldCallServiceForNewBrandAndRepository() {
+        VehicleBrand brand = Mockito.mock(VehicleBrand.class);
+        VehicleModel modelForSave = new VehicleModel();
+        modelForSave.setName(modelName);
+        modelForSave.setBrand(brand);
+        modelForSave.setVehicles(new ArrayList<>());
+
+        Mockito.when(brandService.findByName(brandName)).thenReturn(Optional.empty());
+        Mockito.when(brandService.create(brandName)).thenReturn(brand);
+        Mockito.when(modelRepository.save(Mockito.any(VehicleModel.class))).thenReturn(modelForSave);
+
+        VehicleModel actual = modelService.create(brandName, modelName);
+
+        Assertions.assertNotNull(actual);
+        Assertions.assertEquals(modelForSave, actual);
+        Mockito.verify(brandService).findByName(brandName);
+        Mockito.verify(brandService).create(brandName);
+        Mockito.verify(modelRepository).save(modelForSave);
+    }
+
+    @Test
     void findByName_shouldCallRepository() {
         Optional<VehicleModel> model = Optional.of(Mockito.mock(VehicleModel.class));
 

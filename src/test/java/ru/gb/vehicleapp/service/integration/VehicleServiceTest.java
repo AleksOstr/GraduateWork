@@ -4,15 +4,14 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.test.context.ActiveProfiles;
 import ru.gb.vehicleapp.api.request.VehicleRequest;
 import ru.gb.vehicleapp.exceptions.ExistingValueException;
-import ru.egartech.vehicleapp.repository.*;
 import ru.gb.vehicleapp.repository.*;
 import ru.gb.vehicleapp.service.interfaces.VehicleService;
 import ru.gb.vehicleapp.service.response.VehicleResponse;
-
-import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -147,10 +146,10 @@ public class VehicleServiceTest {
         request.setRegNumber("А002АА112");
         vehicleService.create(request);
 
-        List<VehicleResponse> responses = vehicleService.findAll();
+        Page<VehicleResponse> responses = vehicleService.findAll(PageRequest.of(0, 5));
 
         assertNotNull(responses);
-        assertEquals(2, responses.size());
+        assertEquals(2, responses.getNumberOfElements());
     }
 
     @BeforeEach

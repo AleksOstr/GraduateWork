@@ -7,6 +7,9 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.ui.Model;
 import ru.gb.vehicleapp.api.request.SearchRequest;
 import ru.gb.vehicleapp.api.request.VehicleRequest;
@@ -27,26 +30,29 @@ public class VehicleControllerTest {
 
     @Test
     void getMainPaige_shouldCallService() {
-        VehicleResponse response = Mockito.mock(VehicleResponse.class);
+        Pageable pageable = PageRequest.of(0, 5);
+        Page<VehicleResponse> page = Mockito.mock(Page.class);
 
-        Mockito.when(vehicleService.findAll()).thenReturn(List.of(response));
+        Mockito.when(vehicleService.findAll(pageable)).thenReturn(page);
 
-        String actual = controller.getMainPaige(Mockito.mock(Model.class));
+        String actual = controller.getMainPaige(Mockito.mock(Model.class), 0, 5);
 
         Assertions.assertNotNull(actual);
-        Mockito.verify(vehicleService).findAll();
+        Mockito.verify(vehicleService).findAll(pageable);
     }
 
     @Test
     void filter_shouldCallService() {
         VehicleResponse response = Mockito.mock(VehicleResponse.class);
+        Page<VehicleResponse> page = Mockito.mock(Page.class);
 
-        Mockito.when(vehicleService.findAllByRequest(Mockito.any(SearchRequest.class))).thenReturn(List.of(response));
+        Mockito.when(vehicleService.findAllByRequest(Mockito.any(SearchRequest.class),
+                Mockito.any(Pageable.class))).thenReturn(page);
 
-        String actual = controller.filter(Mockito.mock(Model.class), Mockito.mock(SearchRequest.class));
+        String actual = controller.filter(Mockito.mock(Model.class), Mockito.mock(SearchRequest.class), 0, 5);
 
         Assertions.assertNotNull(actual);
-        Mockito.verify(vehicleService).findAllByRequest(Mockito.any(SearchRequest.class));
+        Mockito.verify(vehicleService).findAllByRequest(Mockito.any(SearchRequest.class), Mockito.any(Pageable.class));
     }
 
     @Test
