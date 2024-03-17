@@ -28,7 +28,6 @@ public class VehicleBrandServiceImplTest {
     void create_shouldCallRepository() {
         VehicleBrand brandForSave = new VehicleBrand();
         brandForSave.setName(brandName);
-        brandForSave.setVehicles(new ArrayList<>());
         brandForSave.setModels(new ArrayList<>());
 
         Mockito.when(brandRepository.save(Mockito.any(VehicleBrand.class))).thenReturn(brandForSave);
@@ -57,7 +56,6 @@ public class VehicleBrandServiceImplTest {
         VehicleBrand brandForUpdate = new VehicleBrand();
         brandForUpdate.setId(UUID.randomUUID());
         brandForUpdate.setName(brandName);
-        brandForUpdate.setVehicles(new ArrayList<>());
         brandForUpdate.setModels(new ArrayList<>());
 
         Mockito.when(brandRepository.save(Mockito.any(VehicleBrand.class))).thenReturn(brandForUpdate);
