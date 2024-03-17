@@ -55,4 +55,10 @@ public interface VehicleService {
      */
     List<VehicleTypeResponse> getTypes();
 
+    /**
+     * Удаление ТС из БД
+     * @param regNumber гос. номер ТС
+     */
+    void delete(String regNumber);
+
 }
