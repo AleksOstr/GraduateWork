@@ -33,7 +33,7 @@ public class VehicleModelServiceImplTest {
     private VehicleModelServiceImpl modelService;
 
     @Test
-    void create_shouldCallRepository() {
+    void create_shouldCallServiceAndRepository() {
         VehicleBrand brand = Mockito.mock(VehicleBrand.class);
         VehicleModel modelForSave = new VehicleModel();
         modelForSave.setName(modelName);
