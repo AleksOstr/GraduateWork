@@ -34,13 +34,20 @@
         <td>
             <form th:method="GET" th:action="@{/vehicle/update/{regNumber}(regNumber=${item.getRegNumber()})}" >
                 <input type="submit" value="Редактировать">
-            </form></td>
+            </form>
+        </td>
+        <td>
+            <form th:method="DELETE" th:action="@{/vehicle/delete/{regNumber}(regNumber=${item.getRegNumber()})}" >
+                <input type="submit" value="Удалить">
+            </form>
+        </td>
     </tr>
     </tbody>
 </table>
 <div th:if="${pageNumber} > 0">
     <a th:href="@{'/vehicle?offset=' + ${(pageNumber - 1)} + '&limit=' + ${limit}}"> Предыдущая страница</a>
 </div>
+<span>Страница <span th:text="${(pageNumber + 1)}"></span> из <span th:text="${totalPages}"></span></span>
 <div th:if="${pageNumber} < (${totalPages} - 1)">
     <a th:href="@{'/vehicle?offset=' + ${(pageNumber + 1)} + '&limit=' + ${limit}}"> Следующая страница</a>
 </div>
