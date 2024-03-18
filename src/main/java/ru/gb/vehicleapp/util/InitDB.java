@@ -9,7 +9,7 @@ import ru.gb.vehicleapp.service.interfaces.VehicleTypeService;
 
 @Service
 @RequiredArgsConstructor
-public class InitH2Data implements CommandLineRunner {
+public class InitDB implements CommandLineRunner {
 
     private final VehicleService vehicleService;
     private final VehicleTypeService typeService;
